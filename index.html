@@ -742,6 +742,62 @@ a{color:var(--maroon);word-break:break-all;font-weight:700}
   100% { transform: rotate(360deg); }
 }
 
+
+/* --- COMPACT DAILY COMPETITION HEATMAP & TRENDS --- */
+.hm {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11.5px;
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  text-align: center;
+}
+.hm th {
+  background: var(--night);
+  color: var(--gold);
+  padding: 6px 6px;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.3px;
+  border: 1px solid rgba(255,255,255,0.12);
+  white-space: nowrap;
+}
+.hm th:first-child {
+  text-align: left;
+  padding-left: 10px;
+}
+.hm td {
+  padding: 4px 4px;
+  font-weight: 700;
+  font-size: 11.5px;
+  border: 1px solid rgba(28,33,69,0.06);
+  transition: all 0.15s ease;
+}
+.hm td.hm-date {
+  text-align: left;
+  padding-left: 8px;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  background: rgba(28,33,69,0.02);
+}
+.hm td.hm-tot {
+  font-weight: 800;
+  color: var(--maroon);
+  background: rgba(140,29,64,0.06);
+}
+.hm-badge {
+  display: inline-block;
+  min-width: 22px;
+  padding: 2px 4px;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.hm-zero {
+  color: rgba(28,33,69,0.22);
+  font-weight: 500;
+}
+
 </style></head><body><canvas id="pt"></canvas>
 <div class="tor"></div><div class="hero">
   <div class="hero-watermark" aria-hidden="true">UTSAV</div>
@@ -800,8 +856,8 @@ a{color:var(--maroon);word-break:break-all;font-weight:700}
 <div class="sec">✨ Executive snapshot</div><div class="kpis" id="k1"></div><div class="kpis s" id="k2"></div>
 <div class="sec">🧾 Form breakdown</div><div class="p"><div class="tw"><table><thead><tr><th>Form</th><th>Participants</th><th>Submissions</th><th>Competition entries</th></tr></thead><tbody id="fb"></tbody></table></div></div>
 <div class="sec" id="sec-competitions">🏆 Competition-wise registrations</div><div class="ecs" id="ecs"></div>
-<div class="sec">📈 Trends</div><div class="g"><div class="p wide"><h3>Registrations per day <small>follows the filters above</small></h3><div class="cv"><canvas id="c5"></canvas></div></div>
-<div class="p wide"><h3>Daily competition heatmap <small>new participants by day × event</small></h3><div class="tw"><table class="hm" id="hm"></table></div></div></div>
+<div class="sec">📈 Trends & Daily Activity</div><div class="g"><div class="p"><h3>Registrations per day <small>follows filters</small></h3><div class="cv" style="height:210px"><canvas id="c5"></canvas></div></div>
+<div class="p"><h3>Daily competition heatmap <small>participants by day × event</small></h3><div class="tw" style="overflow-x:auto"><table class="hm" id="hm"></table></div></div></div>
 <div class="sec">👥 Who is registering</div><div class="g"><div class="p"><h3>Age distribution <small>click to filter</small></h3><div class="cv" style="height:190px"><canvas id="c1"></canvas></div><table id="at"></table></div>
 <div class="p"><h3>Gender <small>general competitions</small></h3><div class="cv"><canvas id="c6"></canvas></div></div></div>
 <div class="sec">🗺️ Geographical reach</div><div class="g"><div class="p"><h3>Participant geography</h3><div class="kpis s" id="geo"></div><div class="cv" style="height:150px"><canvas id="c4"></canvas></div></div>
@@ -952,6 +1008,29 @@ function num(el,n,sfx=''){const f=+el.dataset.v||0;el.dataset.v=n;const t0=perfo
 function mk(id,cfg){if(ch[id])ch[id].destroy();const o=cfg.options=Object.assign({responsive:true,maintainAspectRatio:false,animation:{duration:700}},cfg.options);o.plugins=Object.assign({legend:{display:false}},o.plugins);
 if(o.scales)Object.values(o.scales).forEach(s=>{s.ticks={color:cv('--mut'),precision:0};s.grid={color:cv('--line')}});if(o.plugins.legend.display)o.plugins.legend.labels={color:cv('--mut')};ch[id]=new Chart($(id),cfg)}
 const kp=(l,v,c,x='',cls='')=>`<div class="k ${cls} tilt" style="--kc:${V(c)}" ${x}><b data-v="0" data-n="${v}">0</b><span>${l}</span></div>`;
+
+function parseDateKey(ts) {
+  if (!ts) return '';
+  ts = String(ts).trim();
+  const dmMatch = ts.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (dmMatch) return dmMatch[3] + '-' + dmMatch[2].padStart(2, '0') + '-' + dmMatch[1].padStart(2, '0');
+  const ymMatch = ts.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (ymMatch) return ymMatch[1] + '-' + ymMatch[2].padStart(2, '0') + '-' + ymMatch[3].padStart(2, '0');
+  return ts.slice(0, 10);
+}
+
+function formatDateLabel(isoDate) {
+  if (!isoDate || isoDate.length < 10) return isoDate || '';
+  const parts = isoDate.split('-');
+  if (parts.length === 3) {
+    const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const m = parseInt(parts[1], 10) - 1;
+    const d = parseInt(parts[2], 10);
+    return d + ' ' + (months[m] || '');
+  }
+  return isoDate;
+}
+
 function render(){const a=flt(),n=a.length,ent=a.reduce((s,d)=>s+all(d).length,0),sub=n==D.length?META.sub:a.reduce((s,d)=>s+d.rows,0);
 $('cr1').textContent=CD.length;$('wr1').textContent=WD.length;$('up').textContent='🕒 Updated '+META.upd;
 $('k1').innerHTML=kp('Unique participants',n,'--c1','','big1')+kp('Total registrations (form submissions)',sub,'--c2')+kp('Competition entries',ent,'--c3')+kp('General competitions',n,'--c4')+kp('Wonder Women',WD.length,'--c6','data-go="ww"')+kp('Crown of Vijayawada',CD.length,'--c7','data-go="crown"');
@@ -993,10 +1072,96 @@ mk('c6',{type:'doughnut',data:{labels:['Female','Male','Other'],datasets:[{data:
 $('geo').innerHTML=['Vijayawada','Rest of Andhra Pradesh','Outside AP'].map((t,i)=>kp(t,g3[i],['--c1','--c2','--c3'][i])).join('')+kp('Local share',0,'--c4');
 mk('c4',{type:'bar',data:{labels:['Vijayawada','Rest of AP','Outside AP'],datasets:[{data:g3,backgroundColor:[cv('--c1'),cv('--c2'),cv('--c3')],borderRadius:8}]},options:{indexAxis:'y',scales:{x:{beginAtZero:true},y:{}}}});
 num($('geo').lastChild.firstChild,n?Math.round(g3[0]/n*100):0,'%');
-const dc={};a.forEach(d=>dc[d.ts.slice(0,10)]=(dc[d.ts.slice(0,10)]||0)+1);const dk=Object.keys(dc).sort();
-mk('c5',{type:'line',data:{labels:dk.map(x=>x.slice(5)),datasets:[{data:dk.map(x=>dc[x]),borderColor:cv('--c1'),backgroundColor:cv('--c1')+'33',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:cv('--c2')}]},options:{scales:{y:{beginAtZero:true},x:{}}}});
-const mx=Math.max(1,...dk.flatMap(x=>EK.map(k=>a.filter(d=>d.ts.startsWith(x)&&d.ev[k].length).length)));
-$('hm').innerHTML='<tr><th>Date</th>'+EK.map(k=>`<th>${EV[k][0].replace('Vijayawada ','')}</th>`).join('')+'</tr>'+dk.map(x=>`<tr><td style="text-align:left">${x.slice(5)}</td>`+EK.map(k=>{const v=a.filter(d=>d.ts.startsWith(x)&&d.ev[k].length).length;return `<td style="background:color-mix(in srgb,${V(EV[k][1])} ${Math.round(v/mx*85)}%,transparent);color:${v/mx>.5?'#fff':'inherit'}">${v||''}</td>`}).join('')+'</tr>').join('');
+// --- Registrations per day chart (c5) ---
+const dc={};
+a.forEach(d => {
+  const k = parseDateKey(d.ts);
+  if (k) dc[k] = (dc[k] || 0) + 1;
+});
+const dk = Object.keys(dc).sort();
+mk('c5', {
+  type: 'line',
+  data: {
+    labels: dk.map(formatDateLabel),
+    datasets: [{
+      label: 'Registrations',
+      data: dk.map(x => dc[x]),
+      borderColor: cv('--c1'),
+      backgroundColor: cv('--c1') + '25',
+      borderWidth: 2.5,
+      fill: true,
+      tension: 0.35,
+      pointRadius: 4.5,
+      pointHoverRadius: 7,
+      pointBackgroundColor: cv('--c2'),
+      pointBorderColor: '#fff',
+      pointBorderWidth: 1.5
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          title: (items) => dk[items[0].dataIndex] ? formatDateLabel(dk[items[0].dataIndex]) : items[0].label,
+          label: (item) => ' ' + item.raw + ' registrations'
+        }
+      }
+    },
+    scales: {
+      y: { beginAtZero: true, grid: { color: 'rgba(28,33,69,0.06)' } },
+      x: { grid: { display: false } }
+    }
+  }
+});
+
+// --- Daily competition heatmap (hm) ---
+let maxCellVal = 1;
+dk.forEach(dKey => {
+  EK.forEach(k => {
+    const cntVal = a.filter(d => parseDateKey(d.ts) === dKey && d.ev[k] && d.ev[k].length).length;
+    if (cntVal > maxCellVal) maxCellVal = cntVal;
+  });
+});
+
+let hmHtml = '<thead><tr><th>Date</th>' + 
+  EK.map(k => '<th>' + EV[k][0].replace('Vijayawada ','') + '</th>').join('') + 
+  '<th>Total</th></tr></thead><tbody>';
+
+const colTotals = { I: 0, C: 0, G: 0, Q: 0, F: 0, overall: 0 };
+
+dk.forEach(dKey => {
+  let rowTot = 0;
+  const dateLabel = formatDateLabel(dKey);
+  hmHtml += '<tr><td class="hm-date">' + dateLabel + '</td>';
+
+  EK.forEach(k => {
+    const count = a.filter(d => parseDateKey(d.ts) === dKey && d.ev[k] && d.ev[k].length).length;
+    rowTot += count;
+    colTotals[k] = (colTotals[k] || 0) + count;
+
+    if (count > 0) {
+      const intensity = Math.min(1, Math.max(0.12, count / maxCellVal));
+      const bgCol = 'color-mix(in srgb, ' + V(EV[k][1]) + ' ' + Math.round(intensity * 88) + '%, transparent)';
+      const textCol = intensity > 0.45 ? '#ffffff' : 'var(--ink)';
+      hmHtml += '<td style="background:' + bgCol + ';color:' + textCol + '"><span class="hm-badge">' + count + '</span></td>';
+    } else {
+      hmHtml += '<td><span class="hm-zero">-</span></td>';
+    }
+  });
+
+  colTotals.overall += rowTot;
+  hmHtml += '<td class="hm-tot">' + rowTot + '</td></tr>';
+});
+
+hmHtml += '<tr style="border-top:2px solid var(--line);font-weight:800"><td class="hm-date" style="font-weight:800">Total</td>' +
+  EK.map(k => '<td class="hm-tot">' + (colTotals[k] || 0) + '</td>').join('') +
+  '<td class="hm-tot" style="background:rgba(140,29,64,0.15);color:var(--maroon)">' + colTotals.overall + '</td></tr></tbody>';
+
+$('hm').innerHTML = hmHtml;
+
 $('sb').innerHTML=EK.map(k=>{const m=cnt(flt('s'),d=>d.ev[k].map(sn)),e=Object.entries(m).sort((x,y)=>y[1]-x[1]),mm=e[0]?e[0][1]:1;
 return `<div class="p tilt"><h3 style="color:${V(EV[k][1])}">${EV[k][0]}</h3><div class="bl" style="--kc:${V(EV[k][1])}">${e.map(([s,v])=>`<div data-s="${s}"><span ${F.s==s?'style="color:var(--acc);font-weight:700"':''}>${s}</span><span class="pb"><i style="width:${v/mm*100}%"></i></span><b>${v}</b></div>`).join('')||'<small>No entries</small>'}</div></div>`}).join('');
 const im={};a.forEach(d=>{if(d.inst){const k=d.inst.toLowerCase().replace(/[^a-z0-9 ]/g,' ').split(/\s+/).join(' ');(im[k]=im[k]||{n:d.inst,c:0}).c++}});
@@ -1073,8 +1238,35 @@ const bc=BANDS.map(([l,x,y])=>a.filter(d=>d.age!=null&&d.age>=x&&d.age<=y).lengt
 mk('cc1',{type:'bar',data:{labels:BANDS.map(b=>b[0]),datasets:[{data:bc,backgroundColor:['--c2','--c3','--c1','--c4','--c7'].map(cv),borderRadius:10}]},options:{scales:{y:{beginAtZero:true},x:{}}}});
 mk('cc2',{type:'doughnut',data:{labels:['Female','Male'],datasets:[{data:[gc.Female||0,gc.Male||0],backgroundColor:[cv('--c1'),cv('--c4')],borderColor:cv('--card'),borderWidth:3}]},options:{cutout:'60%',plugins:{legend:{display:true,position:'bottom'}}}});
 mk('cc3',{type:'bar',data:{labels:['Vijayawada','Rest of AP','Outside AP'],datasets:[{data:g3,backgroundColor:['--c1','--c2','--c3'].map(cv),borderRadius:8}]},options:{indexAxis:'y',scales:{x:{beginAtZero:true},y:{}}}});
-const dc=cnt(a,d=>[d.ts.slice(0,10)]),dk=Object.keys(dc).sort();
-mk('cc4',{type:'line',data:{labels:dk.map(x=>x.slice(5)),datasets:[{data:dk.map(x=>dc[x]),borderColor:cv('--c1'),backgroundColor:cv('--c1')+'33',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:cv('--c2')}]},options:{scales:{y:{beginAtZero:true},x:{}}}});
+const cdc={};
+a.forEach(d => {
+  const k = parseDateKey(d.ts);
+  if (k) cdc[k] = (cdc[k] || 0) + 1;
+});
+const cdk = Object.keys(cdc).sort();
+mk('cc4', {
+  type: 'line',
+  data: {
+    labels: cdk.map(formatDateLabel),
+    datasets: [{
+      label: 'Registrations',
+      data: cdk.map(x => cdc[x]),
+      borderColor: cv('--c1'),
+      backgroundColor: cv('--c1') + '25',
+      borderWidth: 2.5,
+      fill: true,
+      tension: 0.35,
+      pointRadius: 4,
+      pointBackgroundColor: cv('--c2')
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true }, x: { grid: { display: false } } }
+  }
+});
 const ic=cnt(a,d=>d.iss);$('cdq').innerHTML=[['Submissions',META.csub,''],['Exact repeats merged',META.csub-CD.length,''],['Same person, multiple submissions',a.filter(d=>d.rows>1).length,'']].map(([l,v])=>`<div><b>${v}</b>${l}</div>`).join('')+Object.entries(ic).map(([k,v])=>`<div data-iss="${k}" class="${CF.is==k?'on':''}"><b>${v}</b>${k}</div>`).join('')||'';
 const st=s=>a.filter(d=>(SS[d.id]||'New')==s).length;$('cfn').innerHTML=ST.map((s,i)=>`<div style="background:${V(SC[i])}"><b>${st(s)}</b>${s}</div>`).join('');
 const H=[['id','ID'],['name','Name'],['age','Age'],['cat','Category'],['g','Gender'],['loc','Location'],['st','Status'],['iss','⚠'],['ts','Registered']];
@@ -1110,8 +1302,35 @@ $('wk1').innerHTML=kp('Unique participants',n,'--c1','','big1')+kp('Total submis
 const cc=WC.map(c=>WD.filter(d=>(!WF.q||(d.name+d.id+d.ph).toLowerCase().includes(WF.q.toLowerCase()))&&d.cats.includes(c)).length),mx=Math.max(1,...cc);
 $('wecs').innerHTML=WC.map((c,i)=>`<div class="ec tilt ${WF.c==c?'on':''}" data-wc="${c}" style="--kc:${V(wcol[i%7])}"><em>${c}</em><b data-v="0" data-n="${cc[i]}">0</b> <small>people</small><div class="pb"><i style="width:${cc[i]/mx*100}%"></i></div></div>`).join('');
 mk('ww1',{type:'bar',data:{labels:['1','2','3','4+'],datasets:[{data:[1,2,3,4].map(k=>a.filter(d=>k<4?d.cats.length==k:d.cats.length>=4).length),backgroundColor:['--c1','--c2','--c3','--c4'].map(cv),borderRadius:10}]},options:{scales:{y:{beginAtZero:true},x:{}}}});
-const dc=cnt(a,d=>[d.ts.slice(0,10)]),dk=Object.keys(dc).sort();
-mk('ww2',{type:'line',data:{labels:dk.map(x=>x.slice(5)),datasets:[{data:dk.map(x=>dc[x]),borderColor:cv('--c6'),backgroundColor:cv('--c6')+'33',fill:true,tension:.35,pointRadius:4,pointBackgroundColor:cv('--c2')}]},options:{scales:{y:{beginAtZero:true},x:{}}}});
+const wdc={};
+a.forEach(d => {
+  const k = parseDateKey(d.ts);
+  if (k) wdc[k] = (wdc[k] || 0) + 1;
+});
+const wdk = Object.keys(wdc).sort();
+mk('ww2', {
+  type: 'line',
+  data: {
+    labels: wdk.map(formatDateLabel),
+    datasets: [{
+      label: 'Registrations',
+      data: wdk.map(x => wdc[x]),
+      borderColor: cv('--c6'),
+      backgroundColor: cv('--c6') + '25',
+      borderWidth: 2.5,
+      fill: true,
+      tension: 0.35,
+      pointRadius: 4,
+      pointBackgroundColor: cv('--c2')
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true }, x: { grid: { display: false } } }
+  }
+});
 $('wdq').innerHTML=[['Submissions',META.wsub],['Same person, multiple submissions',a.filter(d=>d.rows>1).length],['Location: Vijayawada',a.filter(d=>d.loc=='Vijayawada').length],['Age: form only asks “18+”',n]].map(([l,v])=>`<div><b>${v}</b>${l}</div>`).join('')+Object.entries(cnt(a,d=>d.iss)).map(([k,v])=>`<div><b>${v}</b>${k}</div>`).join('');
 $('wfn').innerHTML=ST.map((s,i)=>`<div style="background:${V(SC[i])}"><b>${a.filter(d=>(SS[d.id]||'New')==s).length}</b>${s}</div>`).join('');
 const H=[['id','ID'],['name','Name'],['cats','Categories'],['st','Status'],['iss','⚠'],['ts','Registered']];
@@ -1238,12 +1457,34 @@ function re(k){
     data:{ labels:['Female','Male','Other'], datasets:[{ data:[gc.Female||0, gc.Male||0, gc.Other||0], backgroundColor:[cv('--c1'),cv('--c4'),cv('--c6')], borderWidth:2 }] },
     options:{ cutout:'60%', plugins:{ legend:{ display:true, position:'bottom' } } }
   });
-  const dk = [...new Set(a.map(d=>d.ts.slice(0,10)))].sort();
-  const dcnt = cnt(a, d=>[d.ts.slice(0,10)]);
+  const edc = {};
+  a.forEach(d => {
+    const k = parseDateKey(d.ts);
+    if (k) edc[k] = (edc[k] || 0) + 1;
+  });
+  const edk = Object.keys(edc).sort();
   mk('ec3', {
-    type:'line',
-    data:{ labels:dk.map(x=>x.slice(5)), datasets:[{ data:dk.map(x=>dcnt[x]||0), borderColor:cv(ev.c), backgroundColor:cv(ev.c)+'33', fill:true, tension:.35 }] },
-    options:{ scales:{ y:{beginAtZero:true}, x:{} } }
+    type: 'line',
+    data: {
+      labels: edk.map(formatDateLabel),
+      datasets: [{
+        label: 'Registrations',
+        data: edk.map(x => edc[x]),
+        borderColor: cv(ev.c),
+        backgroundColor: cv(ev.c) + '25',
+        borderWidth: 2.5,
+        fill: true,
+        tension: 0.35,
+        pointRadius: 4,
+        pointBackgroundColor: cv('--gold')
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true }, x: { grid: { display: false } } }
+    }
   });
   
   // Table
