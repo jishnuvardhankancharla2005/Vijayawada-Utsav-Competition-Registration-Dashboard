@@ -467,7 +467,17 @@ tbody tr.r{cursor:pointer;transition:background .15s}
 tbody tr.r:nth-child(even){background:rgba(28,33,69,.025)}
 tbody tr.r:hover{background:rgba(242,176,30,.18)}
 .id{font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:var(--maroon)}
-.t{display:inline-block;border-radius:999px;padding:2px 10px;font-size:11px;color:#fff;margin-right:3px;font-weight:700}
+
+/* Enhanced High-Contrast Category Badges & Table Headers */
+.t{display:inline-block;border-radius:999px;padding:3px 10px;font-size:11.5px;color:#ffffff;margin-right:4px;margin-bottom:2px;font-weight:700;line-height:1.35;background:var(--night);box-shadow:0 1px 3px rgba(28,33,69,.12);text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.t[style*="--c2"],.t[style*="--c5"],.t[style*="#F2B01E"],.t[style*="#E89E15"]{color:#1C2145!important;font-weight:800!important;text-shadow:none!important}
+.fn div[style*="--c2"],.fn div[style*="--c5"]{color:#1C2145!important}
+.fn div[style*="--c2"] b,.fn div[style*="--c5"] b{color:#1C2145!important}
+#th th,#cth th,#wth th{cursor:pointer;user-select:none;transition:background .15s}
+#th th:hover,#cth th:hover,#wth th:hover{background:var(--maroon)}
+.st-tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:700;background:rgba(28,33,69,.06);color:var(--ink);border:1px solid var(--line)}
+.iss-tag{display:inline-block;padding:2px 7px;border-radius:6px;font-size:11px;font-weight:700;background:#FFF4E5;color:#B25E00;border:1px solid #FFE0B2}
+
 .pg{display:flex;justify-content:space-between;align-items:center;margin-top:14px;color:var(--ink2);font-weight:600}
 
 .nd{text-align:center;padding:28px 12px;color:var(--ink2);border:2px dashed var(--line);border-radius:16px;background:var(--paper)}
@@ -854,14 +864,12 @@ a{color:var(--maroon);word-break:break-all;font-weight:700}
 <div class="live-sync-bar" id="live-bar">
   <div class="live-status-badge">
     <span class="live-pulse-dot" id="live-dot"></span>
-    <span id="live-status-text">Live Sync: Initializing...</span>
+    <span id="live-status-text">🟢 Auto-Sync Active (Live Google Sheets)</span>
   </div>
   <div class="live-counts-badge" id="live-counts-text">
     📊 Connecting to live response sheets...
   </div>
-  <button class="btn-live-sync" id="btn-live-sync" onclick="syncAllLiveSheets(true)">
-    <span class="sync-icon">🔄</span> Sync Live Sheets Now
-  </button>
+  <button class="btn-live-sync" id="btn-live-sync" onclick="syncAllLiveSheets(true)"><span class="sync-icon">🔄</span> Refresh Now</button>
 </div>
 <div class="sec" id="sec-totals" style="margin-top:0">🎊 Festival totals · all three forms combined</div><div class="kpis" id="gt"></div><div class="nav" id="nav">
   <button data-v="gen" class="on">🎭 All Competitions</button>
@@ -1317,7 +1325,25 @@ $('cpp').onclick=()=>{cpg=Math.max(0,cpg-1);rc()};$('cpn').onclick=()=>{cpg++;rc
 
 const WD=[{"id": "VUWW0001", "name": "Puvvada nikitha", "age": null, "g": "Female", "ph": "8143650618", "loc": "Vijayawada", "cats": ["Annapoorna", "Avakai", "Gorinta Varnam", "Navya Nagalu", "Saree Sutra", "Thread & Tinge"], "ts": "2026-09-25 12:59", "rows": 1, "link": ["godavari_logili"], "iss": []}, {"id": "VUWW0002", "name": "Sk Meharaj sulthana", "age": null, "g": "Female", "ph": "9885376642", "loc": "Vijayawada", "cats": ["Gorinta Varnam"], "ts": "2026-09-25 13:11", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0003", "name": "G radha", "age": null, "g": "Female", "ph": "8341184455", "loc": "Vijayawada", "cats": ["Annapoorna"], "ts": "2026-09-25 13:25", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0004", "name": "G Mohini", "age": null, "g": "Female", "ph": "7416548156", "loc": "Vijayawada", "cats": ["Annapoorna", "Avakai"], "ts": "2026-09-25 14:46", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0005", "name": "Neeli Pramila Devi", "age": null, "g": "Female", "ph": "9290647458", "loc": "Vijayawada", "cats": ["Annapoorna", "Thread & Tinge"], "ts": "2026-09-25 15:02", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0006", "name": "BATCHU hymavathi", "age": null, "g": "Female", "ph": "9290725773", "loc": "Vijayawada", "cats": ["Avakai"], "ts": "2026-09-25 15:36", "rows": 1, "link": ["No"], "iss": ["Link field unclear (just “Yes”/“No”)"]}, {"id": "VUWW0007", "name": "Budha Tanuja", "age": null, "g": "Female", "ph": "9676252126", "loc": "Vijayawada", "cats": ["Gorinta Varnam"], "ts": "2026-09-25 16:31", "rows": 1, "link": ["Yes"], "iss": ["Link field unclear (just “Yes”/“No”)"]}, {"id": "VUWW0008", "name": "V.sailaja", "age": null, "g": "Female", "ph": "8309544118", "loc": "Vijayawada", "cats": ["Thread & Tinge"], "ts": "2026-09-25 17:33", "rows": 1, "link": ["https://www.instagram.com/reel/DbH-HZ2swHV/ krishna painting"], "iss": []}, {"id": "VUWW0009", "name": "Y Bhuvaneswari", "age": null, "g": "Female", "ph": "9297257015", "loc": "Vijayawada", "cats": ["Shakthi Pitch"], "ts": "2026-09-25 19:00", "rows": 1, "link": ["https://www.instagram.com/jahnaviphotoframes"], "iss": []}, {"id": "VUWW0010", "name": "M subadra", "age": null, "g": "Female", "ph": "9502900282", "loc": "Vijayawada", "cats": ["Annapoorna"], "ts": "2026-09-25 19:21", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0011", "name": "Amulya Veeramaneni", "age": null, "g": "Female", "ph": "7661899655", "loc": "Vijayawada", "cats": ["Malyada", "Navya Nagalu", "Shakthi Pitch"], "ts": "2026-09-25 21:32", "rows": 3, "link": ["https://www.instagram.com/ammucrafts/"], "iss": []}, {"id": "VUWW0012", "name": "Bolisetty Mahalakshmi", "age": null, "g": "Female", "ph": "7842442980", "loc": "Vijayawada", "cats": ["Avakai", "Navya Nagalu"], "ts": "2026-09-25 22:20", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0013", "name": "Yukta Anu Deepika B", "age": null, "g": "Female", "ph": "8712240589", "loc": "Vijayawada", "cats": ["Navya Nagalu"], "ts": "2026-09-26 01:37", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0014", "name": "G Pushpa Kumari", "age": null, "g": "Female", "ph": "9059334535", "loc": "Vijayawada", "cats": ["Annapoorna", "Avakai"], "ts": "2026-09-26 14:16", "rows": 3, "link": [], "iss": ["Name spelled differently across submissions"]}, {"id": "VUWW0015", "name": "Nagakruthika", "age": null, "g": "Female", "ph": "9491616238", "loc": "Vijayawada", "cats": ["Annapoorna"], "ts": "2026-09-27 13:40", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0016", "name": "Mohammed almas", "age": null, "g": "Female", "ph": "6302041578", "loc": "Vijayawada", "cats": ["Annapoorna"], "ts": "2026-09-27 18:31", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0017", "name": "YARAKALA SAI PRASANNA", "age": null, "g": "Female", "ph": "8688030455", "loc": "Vijayawada", "cats": ["Gorinta Varnam", "Thread & Tinge"], "ts": "2026-09-28 19:04", "rows": 2, "link": [], "iss": ["Name spelled differently across submissions"]}, {"id": "VUWW0018", "name": "Gayathri GARIGIPARTHI", "age": null, "g": "Female", "ph": "7075467179", "loc": "Vijayawada", "cats": ["Annapoorna"], "ts": "2026-09-29 08:10", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0019", "name": "Geetanjali GARIGIPARTHI", "age": null, "g": "Female", "ph": "9398173381", "loc": "Vijayawada", "cats": ["Makeup Muse"], "ts": "2026-09-29 08:11", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0020", "name": "Athikamsetty Srilekha", "age": null, "g": "Female", "ph": "9133322448", "loc": "Vijayawada", "cats": ["Shakthi Pitch", "Thread & Tinge"], "ts": "2026-09-29 09:10", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0021", "name": "Neeraja Hari Prabhala", "age": null, "g": "Female", "ph": "9490333194", "loc": "Vijayawada", "cats": ["Annapoorna", "Avakai", "Bommala Koluvu", "Shakthi Pitch", "Thread & Tinge"], "ts": "2026-09-29 14:25", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0022", "name": "Meda Sindhu sri", "age": null, "g": "Female", "ph": "8125796245", "loc": "Vijayawada", "cats": ["Gorinta Varnam", "Makeup Muse", "Saree Sutra", "Thread & Tinge"], "ts": "2026-09-29 22:23", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0023", "name": "N. Vanaja", "age": null, "g": "Female", "ph": "8686085233", "loc": "Vijayawada", "cats": ["Makeup Muse"], "ts": "2026-09-30 06:30", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0024", "name": "Adisri Tutika", "age": null, "g": "Female", "ph": "7075152914", "loc": "Vijayawada", "cats": ["Annapoorna", "Avakai", "Bommala Koluvu", "Gorinta Varnam", "Malyada", "Saree Sutra", "Shakthi Pitch", "Thread & Tinge"], "ts": "2026-09-30 10:50", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0025", "name": "Kanakamedala Tharuni", "age": null, "g": "Female", "ph": "9603027372", "loc": "Vijayawada", "cats": ["Gorinta Varnam"], "ts": "2026-09-30 17:49", "rows": 1, "link": ["J_t 0617"], "iss": []}, {"id": "VUWW0026", "name": "శేగు. వెంకటలక్ష్మి కుమారి", "age": null, "g": "Female", "ph": "8374728932", "loc": "Vijayawada", "cats": ["Avakai"], "ts": "2026-09-30 20:16", "rows": 1, "link": [], "iss": []}, {"id": "VUWW0027", "name": "A.usha rani", "age": null, "g": "Female", "ph": "6281601770", "loc": "Vijayawada", "cats": ["Shakthi Pitch"], "ts": "2026-09-30 20:40", "rows": 1, "link": [], "iss": []}],WE=WD.reduce((s,d)=>s+d.cats.length,0);
 const WF={q:'',c:'',st:'',m:false,l:false,i:false};let wpg=0,wsort={k:'id',d:1};
-const WC=[...new Set(WD.flatMap(d=>d.cats))].sort((x,y)=>WD.filter(d=>d.cats.includes(y)).length-WD.filter(d=>d.cats.includes(x)).length);WC.forEach(c=>$('wc').add(new Option(c,c)));ST.forEach(s=>$('wst').add(new Option(s,s)));
+let WC=[...new Set(WD.flatMap(d=>d.cats))].sort((x,y)=>WD.filter(d=>d.cats.includes(y)).length-WD.filter(d=>d.cats.includes(x)).length);WC.forEach(c=>$('wc').add(new Option(c,c)));ST.forEach(s=>$('wst').add(new Option(s,s)));
+
+function normWCat(catStr) {
+  if (!catStr) return '';
+  const base = catStr.split(' - ')[0].trim();
+  const lower = base.toLowerCase();
+  if (lower.includes('avakai') || lower.includes('pickle')) return 'Avakai';
+  if (lower.includes('annapoorna') || lower.includes('cooking')) return 'Annapoorna';
+  if (lower.includes('gorinta') || lower.includes('mehendi')) return 'Gorinta Varnam';
+  if (lower.includes('saree') || lower.includes('drapping')) return 'Saree Sutra';
+  if (lower.includes('navya') || lower.includes('jeweller') || lower.includes('jewelry')) return 'Navya Nagalu';
+  if (lower.includes('thread') || lower.includes('tinge') || lower.includes('embroidery') || lower.includes('fabric')) return 'Thread & Tinge';
+  if (lower.includes('shakthi') || lower.includes('pitch') || lower.includes('entrepreneur')) return 'Shakthi Pitch';
+  if (lower.includes('makeup') || lower.includes('muse')) return 'Makeup Muse';
+  if (lower.includes('bommala') || lower.includes('koluvu') || lower.includes('doll')) return 'Bommala Koluvu';
+  if (lower.includes('malyada') || lower.includes('hair') || lower.includes('flower')) return 'Malyada';
+  return base;
+}
+
 const wcol=['--c1','--c2','--c3','--c4','--c5','--c6','--c7'];
 function wflt(){const q=WF.q.toLowerCase();return WD.filter(d=>(!q||(d.name+d.id+d.ph).toLowerCase().includes(q))&&(!WF.c||d.cats.includes(WF.c))&&(!WF.st||(SS[d.id]||'New')==WF.st)&&(!WF.m||d.cats.length>1)&&(!WF.l||d.link.length)&&(!WF.i||d.iss.length))}
 function rw(){const a=wflt(),n=a.length,en=a.reduce((s,d)=>s+d.cats.length,0),sub=n==WD.length?META.wsub:a.reduce((s,d)=>s+d.rows,0);
@@ -1360,7 +1386,15 @@ const H=[['id','ID'],['name','Name'],['cats','Categories'],['st','Status'],['iss
 $('wth').innerHTML=H.map(([k,l])=>`<th data-k="${k}">${l}${wsort.k==k?(wsort.d>0?' ▲':' ▼'):''}</th>`).join('');
 document.querySelectorAll('#wth th').forEach(e=>e.onclick=()=>{const k=e.dataset.k;wsort=wsort.k==k?{k,d:-wsort.d}:{k,d:1};rw()});
 const v=d=>wsort.k=='st'?(SS[d.id]||'New'):wsort.k=='iss'?d.iss.length:wsort.k=='cats'?d.cats.length:d[wsort.k]??'';const s=[...a].sort((x,y)=>(v(x)>v(y)?1:v(x)<v(y)?-1:0)*wsort.d),pages=Math.max(1,Math.ceil(s.length/12));wpg=Math.min(wpg,pages-1);
-$('wtb').innerHTML=s.slice(wpg*12,wpg*12+12).map(d=>`<tr class="r" data-i="${WD.indexOf(d)}"><td class="id">${d.id}</td><td>${d.name}</td><td>${d.cats.map(c=>`<span class="t" style="background:${V(wcol[WC.indexOf(c)%7])}">${c}</span>`).join('')}</td><td>${SS[d.id]||'New'}</td><td>${d.iss.length?'⚠ '+d.iss.length:''}</td><td>${d.ts.slice(0,10)}</td></tr>`).join('')||'<tr><td colspan=6>No matches</td></tr>';
+$('wtb').innerHTML=s.slice(wpg*12,wpg*12+12).map(d=>{
+  const catBadges=d.cats.map(c=>{
+    const cleanCat=normWCat(c);
+    const idx=WC.indexOf(cleanCat)!==-1?WC.indexOf(cleanCat):WC.indexOf(c);
+    const colVar=idx!==-1?wcol[idx%7]:'--c6';
+    return `<span class="t" style="background:${V(colVar)}">${cleanCat}</span>`;
+  }).join('');
+  return `<tr class="r" data-i="${WD.indexOf(d)}"><td class="id">${d.id}</td><td style="font-weight:700;color:var(--ink)">${d.name}</td><td>${catBadges}</td><td><span class="st-tag">${SS[d.id]||'New'}</span></td><td>${d.iss.length?`<span class="iss-tag">⚠ ${d.iss.length}</span>`:''}</td><td style="color:var(--ink2);font-size:12.5px">${(d.ts||'').slice(0,10)}</td></tr>`;
+}).join('')||'<tr><td colspan=6 style="text-align:center;padding:24px;color:var(--ink2)">No matches</td></tr>';
 $('wpi').textContent=`Page ${wpg+1} of ${pages} · ${s.length} participants`;
 document.querySelectorAll('#wtb tr.r').forEach(e=>e.onclick=()=>wshow(WD[e.dataset.i]));
 document.querySelectorAll('[data-wc]').forEach(e=>e.onclick=()=>{
@@ -1821,7 +1855,7 @@ async function syncAllLiveSheets(manual) {
       const loc = (r[wLocCol] || 'Vijayawada').trim();
       const catsRaw = (r[wCatCol] || '').trim();
       const linkRaw = (r[wLinkCol] || '').trim();
-      const cats = catsRaw ? catsRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const rawItems = catsRaw ? catsRaw.split(',').map(s => s.trim()).filter(Boolean) : []; const cats = rawItems.map(normWCat).filter(Boolean);
 
       let id = (wIdCol !== -1 && r[wIdCol]) ? r[wIdCol].trim().toUpperCase() : null;
       if (!id || !id.startsWith('VUWW')) {
@@ -1989,6 +2023,17 @@ async function syncAllLiveSheets(manual) {
     window.CE = CD.length;
     window.WE = WD.reduce((s,d) => s + (d.cats ? d.cats.length : 0), 0);
 
+    
+    // Refresh Wonder Women Categories & Filter Dropdown
+    WC = [...new Set(WD.flatMap(d => d.cats.map(normWCat)))].sort((x, y) => WD.filter(d => d.cats.map(normWCat).includes(y)).length - WD.filter(d => d.cats.map(normWCat).includes(x)).length);
+    const wcSelect = $('wc');
+    if (wcSelect) {
+      const curVal = wcSelect.value;
+      wcSelect.innerHTML = '<option value="">All categories</option>';
+      WC.forEach(c => wcSelect.add(new Option(c, c)));
+      wcSelect.value = curVal;
+    }
+
     // Refresh All Views & Analytics
     totals();
     render();
@@ -2000,8 +2045,8 @@ async function syncAllLiveSheets(manual) {
 
     // Update Status Indicators
     if (dot) dot.className = 'live-pulse-dot';
-    if (statusTxt) statusTxt.textContent = '🟢 Live Google Sheets Sync: Connected';
-    if (countsTxt) countsTxt.textContent = '📊 ' + s1.rows.length + ' General (' + D.length + ' Uniq) · ' + s3.rows.length + ' Crown (' + CD.length + ' Uniq) · ' + s2.rows.length + ' Wonder Women (' + WD.length + ' Uniq)';
+    if (statusTxt) statusTxt.textContent = '🟢 Auto-Sync Active (Live Google Sheets)';
+    if (countsTxt) countsTxt.textContent = '📊 ' + s1.rows.length + ' General (' + D.length + ' Uniq) · ' + s3.rows.length + ' Crown (' + CD.length + ' Uniq) · ' + s2.rows.length + ' Wonder Women (' + WD.length + ' Uniq) · Auto-syncs every 25s';
 
     console.log('Live sync complete! Totals:', { general: s1.rows.length, crown: s3.rows.length, wonder: s2.rows.length });
   } catch (err) {
@@ -2014,13 +2059,25 @@ async function syncAllLiveSheets(manual) {
   }
 }
 
-// Auto-trigger on page load and every 45 seconds
-window.addEventListener('DOMContentLoaded', () => {
-  setTimeout(() => {
-    syncAllLiveSheets(false);
-  }, 200);
-  setInterval(() => {
-    syncAllLiveSheets(false);
-  }, 45000);
+// AUTOMATIC LIVE SYNC ENGINE - NO MANUAL SYNC REQUIRED
+function initLiveSync() {
+  syncAllLiveSheets(false);
+  if (!window._syncTimer) {
+    window._syncTimer = setInterval(() => {
+      syncAllLiveSheets(false);
+    }, 25000);
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initLiveSync);
+  setTimeout(initLiveSync, 100);
+} else {
+  initLiveSync();
+}
+
+window.addEventListener('focus', () => syncAllLiveSheets(false));
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) syncAllLiveSheets(false);
 });
 </script></body></html>
