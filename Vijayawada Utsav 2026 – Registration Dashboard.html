@@ -743,32 +743,55 @@ a{color:var(--maroon);word-break:break-all;font-weight:700}
 }
 
 
-/* --- COMPACT DAILY COMPETITION HEATMAP & TRENDS --- */
+/* --- ULTRA-COMPACT TRENDS & HEATMAP --- */
+.sec-badge {
+  font-family: 'Hanken Grotesk', system-ui, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--maroon);
+  background: rgba(140, 29, 64, 0.08);
+  border: 1px solid rgba(140, 29, 64, 0.2);
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+.hm-wrap {
+  overflow-x: auto;
+  max-height: 205px;
+  overflow-y: auto;
+  border-radius: 8px;
+  border: 1px solid rgba(28,33,69,0.08);
+}
 .hm {
   width: 100%;
   border-collapse: collapse;
-  font-size: 11.5px;
+  font-size: 11px;
   font-family: 'Hanken Grotesk', system-ui, sans-serif;
   text-align: center;
+  line-height: 1.2;
 }
 .hm th {
   background: var(--night);
   color: var(--gold);
-  padding: 6px 6px;
+  padding: 5px 6px;
   font-weight: 700;
-  font-size: 11px;
+  font-size: 10.5px;
   letter-spacing: 0.3px;
+  position: sticky;
+  top: 0;
+  z-index: 2;
   border: 1px solid rgba(255,255,255,0.12);
   white-space: nowrap;
 }
 .hm th:first-child {
   text-align: left;
-  padding-left: 10px;
+  padding-left: 8px;
 }
 .hm td {
-  padding: 4px 4px;
+  padding: 3px 4px;
   font-weight: 700;
-  font-size: 11.5px;
+  font-size: 11px;
   border: 1px solid rgba(28,33,69,0.06);
   transition: all 0.15s ease;
 }
@@ -787,10 +810,10 @@ a{color:var(--maroon);word-break:break-all;font-weight:700}
 }
 .hm-badge {
   display: inline-block;
-  min-width: 22px;
-  padding: 2px 4px;
-  border-radius: 5px;
-  font-size: 11px;
+  min-width: 20px;
+  padding: 1.5px 4px;
+  border-radius: 4px;
+  font-size: 10.5px;
   font-weight: 700;
 }
 .hm-zero {
@@ -856,8 +879,8 @@ a{color:var(--maroon);word-break:break-all;font-weight:700}
 <div class="sec">✨ Executive snapshot</div><div class="kpis" id="k1"></div><div class="kpis s" id="k2"></div>
 <div class="sec">🧾 Form breakdown</div><div class="p"><div class="tw"><table><thead><tr><th>Form</th><th>Participants</th><th>Submissions</th><th>Competition entries</th></tr></thead><tbody id="fb"></tbody></table></div></div>
 <div class="sec" id="sec-competitions">🏆 Competition-wise registrations</div><div class="ecs" id="ecs"></div>
-<div class="sec">📈 Trends & Daily Activity</div><div class="g"><div class="p"><h3>Registrations per day <small>follows filters</small></h3><div class="cv" style="height:210px"><canvas id="c5"></canvas></div></div>
-<div class="p"><h3>Daily competition heatmap <small>participants by day × event</small></h3><div class="tw" style="overflow-x:auto"><table class="hm" id="hm"></table></div></div></div>
+<div class="sec">📈 Trends & Daily Activity <span class="sec-badge" id="trend-peak-badge">Peak: 109 on 25 Sep</span></div><div class="g"><div class="p"><h3>Registrations per day <small>follows filters</small></h3><div class="cv" style="height:185px"><canvas id="c5"></canvas></div></div>
+<div class="p"><h3>Daily competition heatmap <small>participants by day × event</small></h3><div class="hm-wrap"><table class="hm" id="hm"></table></div></div></div>
 <div class="sec">👥 Who is registering</div><div class="g"><div class="p"><h3>Age distribution <small>click to filter</small></h3><div class="cv" style="height:190px"><canvas id="c1"></canvas></div><table id="at"></table></div>
 <div class="p"><h3>Gender <small>general competitions</small></h3><div class="cv"><canvas id="c6"></canvas></div></div></div>
 <div class="sec">🗺️ Geographical reach</div><div class="g"><div class="p"><h3>Participant geography</h3><div class="kpis s" id="geo"></div><div class="cv" style="height:150px"><canvas id="c4"></canvas></div></div>
@@ -1585,7 +1608,8 @@ x.save();x.translate(p.x,p.y);x.rotate(p.a);x.scale(1,Math.abs(Math.cos(p.s*2))*
 
 
 // =========================================================================
-// LIVE GOOGLE SHEETS SYNC ENGINE
+// =========================================================================
+// BULLETPROOF LIVE GOOGLE SHEETS SYNC ENGINE
 // =========================================================================
 const LIVE_SHEETS = {
   general: '19TGx08ZSiWVrelAQ2esXTTwb0r82Z-5wUbuexBJYdLQ',
@@ -1608,32 +1632,42 @@ function normNm(n) {
   return String(n).trim().replace(/\s+/g, ' ');
 }
 
-// Fetch Google Sheets GViz table with automatic JSONP fallback for file:/// CORS
-function fetchGVizTable(sheetId) {
+// Universal JSONP Google Sheets Loader (Works 100% in file:// and http:// with NO CORS ERRORS)
+function fetchSheetGViz(sheetId) {
   return new Promise((resolve, reject) => {
-    const url = 'https://docs.google.com/spreadsheets/d/' + sheetId + '/gviz/tq?tqx=out:json&t=' + Date.now();
-    fetch(url)
-      .then(res => res.text())
-      .then(text => {
-        const clean = text.replace(/^[^{]*/, '').replace(/[^}]*$/, '');
-        resolve(JSON.parse(clean));
-      })
-      .catch(() => {
-        // Fallback to JSONP script tag
-        const cbName = 'gviz_cb_' + Math.random().toString(36).slice(2, 9);
-        const script = document.createElement('script');
-        window[cbName] = function(json) {
-          delete window[cbName];
-          script.remove();
-          resolve(json);
-        };
-        script.onerror = function(err) {
-          script.remove();
-          reject(err);
-        };
-        script.src = 'https://docs.google.com/spreadsheets/d/' + sheetId + '/gviz/tq?tqx=responseHandler:' + cbName + '&t=' + Date.now();
-        document.body.appendChild(script);
-      });
+    const cbName = 'gviz_' + sheetId.replace(/[^a-zA-Z0-9]/g, '').slice(0, 8) + '_' + Math.floor(Math.random() * 1000000);
+    const script = document.createElement('script');
+    let timer = setTimeout(() => {
+      cleanup();
+      reject(new Error('Timeout loading ' + sheetId));
+    }, 15000);
+
+    function cleanup() {
+      clearTimeout(timer);
+      try { delete window[cbName]; } catch(e) { window[cbName] = undefined; }
+      if (script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    window[cbName] = function(json) {
+      cleanup();
+      resolve(json);
+    };
+
+    script.onerror = function() {
+      cleanup();
+      // Secondary fallback to standard fetch if available
+      const url = 'https://docs.google.com/spreadsheets/d/' + sheetId + '/gviz/tq?tqx=out:json&t=' + Date.now();
+      fetch(url)
+        .then(r => r.text())
+        .then(t => {
+          const clean = t.replace(/^[^{]*/, '').replace(/[^}]*$/, '');
+          resolve(JSON.parse(clean));
+        })
+        .catch(e => reject(e));
+    };
+
+    script.src = 'https://docs.google.com/spreadsheets/d/' + sheetId + '/gviz/tq?tqx=responseHandler:' + cbName + '&t=' + Date.now();
+    (document.head || document.body).appendChild(script);
   });
 }
 
@@ -1659,20 +1693,24 @@ async function syncAllLiveSheets(manual) {
 
   if (btn) btn.classList.add('syncing');
   if (dot) { dot.className = 'live-pulse-dot syncing'; }
-  if (statusTxt) statusTxt.textContent = 'Syncing live entries...';
+  if (statusTxt) statusTxt.textContent = 'Syncing live sheets...';
 
   try {
     const [rawGeneral, rawWonder, rawCrown] = await Promise.all([
-      fetchGVizTable(LIVE_SHEETS.general),
-      fetchGVizTable(LIVE_SHEETS.wonder),
-      fetchGVizTable(LIVE_SHEETS.crown)
+      fetchSheetGViz(LIVE_SHEETS.general),
+      fetchSheetGViz(LIVE_SHEETS.wonder),
+      fetchSheetGViz(LIVE_SHEETS.crown)
     ]);
 
     const s1 = parseGVizRows(rawGeneral);
     const s2 = parseGVizRows(rawWonder);
     const s3 = parseGVizRows(rawCrown);
 
+    console.log('Live Sheets fetched successfully: General=' + s1.rows.length + ', Wonder=' + s2.rows.length + ', Crown=' + s3.rows.length);
+
+    // =========================================================
     // 1. Process Crown of Vijayawada (s3)
+    // =========================================================
     const crownMap = new Map();
     let crownSeq = 85;
     CD.forEach(c => {
@@ -1684,8 +1722,8 @@ async function syncAllLiveSheets(manual) {
       if (num >= crownSeq) crownSeq = num + 1;
     });
 
-    // Check if Registration ID column is present in sheet
-    let cIdCol = s3.cols.findIndex(c => c.toLowerCase() === 'registration id');
+    const cIdCol = s3.cols.findIndex(c => c.toLowerCase() === 'registration id');
+    const cTsCol = s3.cols.findIndex(c => /timestamp|time|date/i.test(c));
     let cNameCol = s3.cols.findIndex(c => c.toLowerCase().includes('name'));
     let cAgeCol = s3.cols.findIndex(c => c.toLowerCase().includes('age'));
     let cGenCol = s3.cols.findIndex(c => c.toLowerCase().includes('gender'));
@@ -1701,7 +1739,7 @@ async function syncAllLiveSheets(manual) {
     const cdByPerson = new Map();
 
     s3.rows.forEach(r => {
-      const ts = (r[0] || '').trim();
+      const ts = (cTsCol !== -1 ? r[cTsCol] : (cIdCol === 0 ? r[1] : r[0])) || '';
       const name = normNm(r[cNameCol]);
       if (!name) return;
       const ph = normPh(r[cPhCol]);
@@ -1744,7 +1782,9 @@ async function syncAllLiveSheets(manual) {
       newCD.forEach(c => CD.push(c));
     }
 
+    // =========================================================
     // 2. Process Wonder Women (s2)
+    // =========================================================
     const wwMap = new Map();
     let wwSeq = 28;
     WD.forEach(w => {
@@ -1757,7 +1797,8 @@ async function syncAllLiveSheets(manual) {
       if (num >= wwSeq) wwSeq = num + 1;
     });
 
-    let wIdCol = s2.cols.findIndex(c => c.toLowerCase() === 'registration id');
+    const wIdCol = s2.cols.findIndex(c => c.toLowerCase() === 'registration id');
+    const wTsCol = s2.cols.findIndex(c => /timestamp|time|date/i.test(c));
     let wNameCol = s2.cols.findIndex(c => c.toLowerCase().includes('name'));
     let wPhCol = s2.cols.findIndex(c => c.toLowerCase().includes('contact') || c.toLowerCase().includes('phone'));
     let wCatCol = s2.cols.findIndex(c => c.toLowerCase().includes('wonder women'));
@@ -1772,7 +1813,7 @@ async function syncAllLiveSheets(manual) {
     const wdByPerson = new Map();
 
     s2.rows.forEach(r => {
-      const ts = (r[0] || '').trim();
+      const ts = (wTsCol !== -1 ? r[wTsCol] : (wIdCol === 0 ? r[1] : r[0])) || '';
       const name = normNm(r[wNameCol]);
       if (!name) return;
       const ph = normPh(r[wPhCol]);
@@ -1810,7 +1851,9 @@ async function syncAllLiveSheets(manual) {
       newWD.forEach(w => WD.push(w));
     }
 
+    // =========================================================
     // 3. Process General Competitions (s1)
+    // =========================================================
     const genMap = new Map();
     let genSeq = 227;
     D.forEach(d => {
@@ -1842,7 +1885,8 @@ async function syncAllLiveSheets(manual) {
     genMap.set('ph_nm:9494405546_drithvikramachandra', 'VUSJ0101');
     genMap.set('nm:drithvikramachandra', 'VUSJ0101');
 
-    let gIdCol = s1.cols.findIndex(c => c.toLowerCase() === 'registration id');
+    const gIdCol = s1.cols.findIndex(c => c.toLowerCase() === 'registration id');
+    const gTsCol = s1.cols.findIndex(c => /timestamp|time|date/i.test(c));
     let gNameCol = s1.cols.findIndex(c => c.toLowerCase().includes('name'));
     let gAgeCatCol = s1.cols.findIndex(c => c.toLowerCase() === 'age');
     let gAgeNumCol = s1.cols.findIndex(c => c.toLowerCase().includes('age in number'));
@@ -1870,23 +1914,24 @@ async function syncAllLiveSheets(manual) {
     const dByPerson = new Map();
 
     s1.rows.forEach(r => {
-      const ts = (r[0] || '').trim();
+      // PROPER TIMESTAMP DETECTION
+      const ts = (gTsCol !== -1 ? r[gTsCol] : (gIdCol === 0 ? r[1] : r[0])) || '';
       const name = normNm(r[gNameCol]);
       if (!name) return;
-      const ageCat = (r[gAgeCatCol] || '').trim();
+      const ageCat = (gAgeCatCol !== -1 ? r[gAgeCatCol] : '').trim();
       const ageNum = parseInt(r[gAgeNumCol]) || null;
-      const g = (r[gGenCol] || '').trim();
+      const g = (gGenCol !== -1 ? r[gGenCol] : '').trim();
       const ph = normPh(r[gPhCol]);
-      const loc = (r[gLocCol] || 'Vijayawada').trim();
+      const loc = (gLocCol !== -1 ? r[gLocCol] : 'Vijayawada').trim();
       const kName = cleanStr(name);
 
-      const evI = parseList(r[gIdolCol]);
-      const evC = parseList(r[gChampsCol]);
-      const evG = parseList(r[gTalentCol]);
-      const evQ = parseList(r[gQuizCol]);
-      const evF = parseList(r[gFamilyCol]);
-      const link = r[gLinkCol] ? [r[gLinkCol].trim()] : [];
-      const inst = r[gInstCol] ? r[gInstCol].trim() : null;
+      const evI = gIdolCol !== -1 ? parseList(r[gIdolCol]) : [];
+      const evC = gChampsCol !== -1 ? parseList(r[gChampsCol]) : [];
+      const evG = gTalentCol !== -1 ? parseList(r[gTalentCol]) : [];
+      const evQ = gQuizCol !== -1 ? parseList(r[gQuizCol]) : [];
+      const evF = gFamilyCol !== -1 ? parseList(r[gFamilyCol]) : [];
+      const link = (gLinkCol !== -1 && r[gLinkCol]) ? [r[gLinkCol].trim()] : [];
+      const inst = (gInstCol !== -1 && r[gInstCol]) ? r[gInstCol].trim() : null;
 
       let id = (gIdCol !== -1 && r[gIdCol]) ? r[gIdCol].trim().toUpperCase() : null;
       if (!id || !id.startsWith('VU')) {
@@ -1932,7 +1977,7 @@ async function syncAllLiveSheets(manual) {
       newD.forEach(d => D.push(d));
     }
 
-    // Update META & Entry Counts
+    // Update Global Totals & Counters
     META.sub = s1.rows.length;
     META.csub = s3.rows.length;
     META.wsub = s2.rows.length;
@@ -1944,7 +1989,7 @@ async function syncAllLiveSheets(manual) {
     window.CE = CD.length;
     window.WE = WD.reduce((s,d) => s + (d.cats ? d.cats.length : 0), 0);
 
-    // Refresh All UI Sections
+    // Refresh All Views & Analytics
     totals();
     render();
     rc();
@@ -1958,25 +2003,24 @@ async function syncAllLiveSheets(manual) {
     if (statusTxt) statusTxt.textContent = '🟢 Live Google Sheets Sync: Connected';
     if (countsTxt) countsTxt.textContent = '📊 ' + s1.rows.length + ' General (' + D.length + ' Uniq) · ' + s3.rows.length + ' Crown (' + CD.length + ' Uniq) · ' + s2.rows.length + ' Wonder Women (' + WD.length + ' Uniq)';
 
-    console.log('Live sync completed successfully! Total rows:', s1.rows.length + s2.rows.length + s3.rows.length);
+    console.log('Live sync complete! Totals:', { general: s1.rows.length, crown: s3.rows.length, wonder: s2.rows.length });
   } catch (err) {
-    console.warn('Live sync failed or offline, using cached snapshot:', err);
+    console.warn('Live sync fallback to cache:', err);
     if (dot) dot.className = 'live-pulse-dot error';
-    if (statusTxt) statusTxt.textContent = '⚪ Offline / Cached Mode · Click to Retry';
+    if (statusTxt) statusTxt.textContent = '⚪ Offline / Cached Snapshot · Click to Retry';
     if (countsTxt) countsTxt.textContent = '📊 ' + D.length + ' General · ' + CD.length + ' Crown · ' + WD.length + ' Wonder Women (Cached)';
   } finally {
     if (btn) btn.classList.remove('syncing');
   }
 }
 
-// Auto-trigger sync on page load and every 60 seconds
+// Auto-trigger on page load and every 45 seconds
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
     syncAllLiveSheets(false);
-  }, 300);
+  }, 200);
   setInterval(() => {
     syncAllLiveSheets(false);
-  }, 60000);
+  }, 45000);
 });
-
 </script></body></html>
