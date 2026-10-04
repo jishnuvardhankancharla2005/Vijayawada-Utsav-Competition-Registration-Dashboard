@@ -66,6 +66,26 @@
         <span class="nav-icon" aria-hidden="true">🎭</span>
         <span>General</span>
       </a>
+      <a href="#idol" class="nav-link" id="nav-idol">
+        <span class="nav-icon" aria-hidden="true">🎤</span>
+        <span>Idol</span>
+      </a>
+      <a href="#champs" class="nav-link" id="nav-champs">
+        <span class="nav-icon" aria-hidden="true">🏆</span>
+        <span>Champs</span>
+      </a>
+      <a href="#talent" class="nav-link" id="nav-talent">
+        <span class="nav-icon" aria-hidden="true">🎨</span>
+        <span>Got Talent</span>
+      </a>
+      <a href="#quiz" class="nav-link" id="nav-quiz">
+        <span class="nav-icon" aria-hidden="true">🧠</span>
+        <span>Quiz</span>
+      </a>
+      <a href="#family" class="nav-link" id="nav-family">
+        <span class="nav-icon" aria-hidden="true">👨‍👩‍👧</span>
+        <span>Family</span>
+      </a>
       <a href="#crown" class="nav-link" id="nav-crown">
         <span class="nav-icon" aria-hidden="true">👑</span>
         <span>Crown</span>
@@ -200,6 +220,24 @@
             <canvas id="chart-top-competitions" aria-label="Horizontal bar chart of top competitions"></canvas>
           </div>
         </article>
+
+        <!-- Widget 7: All 7 Official Competitions Showcase Grid -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <div>
+              <h3 class="card-title">Official Competitions Showcase</h3>
+              <p style="font-size:0.8rem; color:var(--muted); margin:2px 0 0 0;">
+                Direct access to all 7 official title competitions, posters, sub-competitions & participant directories
+              </p>
+            </div>
+            <span style="font-size:0.78rem; font-weight:700; color:var(--primary); background:rgba(179,18,60,0.1); padding:4px 10px; border-radius:9999px;">
+              46 Competitions Total
+            </span>
+          </div>
+          <div class="competition-showcase-grid" id="overview-competitions-grid">
+            <!-- Dynamically populated with 7 cards in app.js -->
+          </div>
+        </article>
       </div>
     </section>
 
@@ -213,6 +251,15 @@
           <h2 class="panel-title" id="gen-heading">General Competitions</h2>
           <p class="panel-desc">Vijayawada Idol · Champs · Got Talent · The Vijayawada Quiz · Family Talent</p>
         </div>
+      </div>
+
+      <div class="sub-nav-pills">
+        <button class="sub-nav-pill active" onclick="location.hash='#gen'">🎭 All General</button>
+        <button class="sub-nav-pill" onclick="location.hash='#idol'">🎤 Vijayawada Idol</button>
+        <button class="sub-nav-pill" onclick="location.hash='#champs'">🏆 Vijayawada Champs</button>
+        <button class="sub-nav-pill" onclick="location.hash='#talent'">🎨 Got Talent</button>
+        <button class="sub-nav-pill" onclick="location.hash='#quiz'">🧠 The Vijayawada Quiz</button>
+        <button class="sub-nav-pill" onclick="location.hash='#family'">👨‍👩‍👧 Family Talent</button>
       </div>
 
       <div class="widget-grid">
@@ -262,6 +309,696 @@
     </section>
 
     <!-- =========================================================================
+         TAB 2A: VIJAYAWADA IDOL
+         ========================================================================= -->
+    <section class="tab-panel" id="tab-idol" aria-labelledby="idol-heading">
+      <div class="compact-hero-banner">
+        <img src="vijayawada_assets/idol.jpg" alt="Vijayawada Idol Poster" class="compact-thumbnail" width="80" height="80">
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;">
+            <h2 class="panel-title" id="idol-heading">Vijayawada Idol <span style="font-family:'Tiro Telugu',serif; font-size:1.1rem; color:var(--primary); font-weight:600;">· విజయవాడ ఐడల్</span></h2>
+            <span class="badge" style="background:#8C1D40; color:#fff; font-weight:700;">Solo Classical & Thespian Arts</span>
+          </div>
+          <p class="panel-desc">Solo dance (classical & western), vocal music (carnatic & light), musical instruments, and mono action.</p>
+        </div>
+      </div>
+
+      <div class="sub-nav-pills">
+        <button class="sub-nav-pill" onclick="location.hash='#gen'">🎭 All General</button>
+        <button class="sub-nav-pill active" onclick="location.hash='#idol'">🎤 Vijayawada Idol</button>
+        <button class="sub-nav-pill" onclick="location.hash='#champs'">🏆 Vijayawada Champs</button>
+        <button class="sub-nav-pill" onclick="location.hash='#talent'">🎨 Got Talent</button>
+        <button class="sub-nav-pill" onclick="location.hash='#quiz'">🧠 The Vijayawada Quiz</button>
+        <button class="sub-nav-pill" onclick="location.hash='#family'">👨‍👩‍👧 Family Talent</button>
+      </div>
+
+      <div class="widget-grid">
+        <!-- Event KPI Row -->
+        <section class="kpi-row widget-col-3" aria-label="Idol Key Metrics">
+          <div class="kpi-box">
+            <span class="kpi-value" id="idol-kpi-participants">--</span>
+            <span class="kpi-label">Total Participants</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="idol-kpi-entries">--</span>
+            <span class="kpi-label">Competition Entries</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="idol-kpi-sj">--</span>
+            <span class="kpi-label">Sub Junior (6–12)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="idol-kpi-j">--</span>
+            <span class="kpi-label">Junior (13–18)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="idol-kpi-s">--</span>
+            <span class="kpi-label">Senior (19+)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="idol-kpi-vja">--</span>
+            <span class="kpi-label">From Vijayawada</span>
+          </div>
+        </section>
+
+        <!-- Sub-Competitions Cards -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Sub-Competitions in Vijayawada Idol</h3>
+            <span style="font-size:0.75rem; color:var(--muted);">Click any card to filter directory</span>
+          </div>
+          <div class="sub-cat-grid" id="idol-sub-cards">
+            <!-- Dynamically populated in app.js -->
+          </div>
+        </article>
+
+        <!-- Age Bands Chart -->
+        <article class="card widget-col-2">
+          <div class="card-header"><h3 class="card-title">Age Split</h3></div>
+          <div class="chart-wrap">
+            <canvas id="chart-idol-age" aria-label="Age split for Vijayawada Idol"></canvas>
+          </div>
+        </article>
+
+        <!-- Gender Chart -->
+        <article class="card">
+          <div class="card-header"><h3 class="card-title">Gender Split</h3></div>
+          <div class="chart-wrap">
+            <canvas id="chart-idol-gender" aria-label="Gender split for Vijayawada Idol"></canvas>
+          </div>
+        </article>
+
+        <!-- Dedicated Participant Directory Table -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Vijayawada Idol Participant Directory</h3>
+            <span id="idol-dir-count" style="font-size:0.8rem; font-weight:600; color:var(--muted);">-- participants</span>
+          </div>
+
+          <div class="event-filter-toolbar">
+            <input type="search" class="event-filter-input" id="idol-search" placeholder="Search name, ID, phone, institution…">
+            <select class="event-filter-select" id="idol-filter-sub">
+              <option value="all">All Sub-Competitions</option>
+            </select>
+            <select class="event-filter-select" id="idol-filter-cat">
+              <option value="all">All Categories</option>
+              <option value="SJ">Sub Junior (6–12)</option>
+              <option value="J">Junior (13–18)</option>
+              <option value="S">Senior (19+)</option>
+            </select>
+            <select class="event-filter-select" id="idol-filter-status">
+              <option value="all">All Statuses</option>
+              <option value="New">New</option>
+              <option value="Verified">Verified</option>
+              <option value="Contacted">Contacted</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Needs Correction">Needs Correction</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" aria-label="Vijayawada Idol Directory">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Participant</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Sub-Competitions</th>
+                  <th scope="col">Institution</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="idol-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="event-pagination">
+            <span id="idol-pagination-info">Showing 1–25 of --</span>
+            <div style="display:flex; gap:8px;">
+              <button id="idol-btn-prev">‹ Previous</button>
+              <button id="idol-btn-next">Next ›</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TAB 2B: VIJAYAWADA CHAMPS
+         ========================================================================= -->
+    <section class="tab-panel" id="tab-champs" aria-labelledby="champs-heading">
+      <div class="compact-hero-banner">
+        <img src="vijayawada_assets/champs.jpg" alt="Vijayawada Champs Poster" class="compact-thumbnail" width="80" height="80">
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;">
+            <h2 class="panel-title" id="champs-heading">Vijayawada Champs <span style="font-family:'Tiro Telugu',serif; font-size:1.1rem; color:var(--accent); font-weight:600;">· విజయవాడ చాంప్స్</span></h2>
+            <span class="badge" style="background:#F2B01E; color:#1C2145; font-weight:700;">Group Arts & Athletic Contests</span>
+          </div>
+          <p class="panel-desc">Group dance, vocal choir, bands, karate, skating, yoga, chess, and theatre productions.</p>
+        </div>
+      </div>
+
+      <div class="sub-nav-pills">
+        <button class="sub-nav-pill" onclick="location.hash='#gen'">🎭 All General</button>
+        <button class="sub-nav-pill" onclick="location.hash='#idol'">🎤 Vijayawada Idol</button>
+        <button class="sub-nav-pill active" onclick="location.hash='#champs'">🏆 Vijayawada Champs</button>
+        <button class="sub-nav-pill" onclick="location.hash='#talent'">🎨 Got Talent</button>
+        <button class="sub-nav-pill" onclick="location.hash='#quiz'">🧠 The Vijayawada Quiz</button>
+        <button class="sub-nav-pill" onclick="location.hash='#family'">👨‍👩‍👧 Family Talent</button>
+      </div>
+
+      <div class="widget-grid">
+        <!-- Event KPI Row -->
+        <section class="kpi-row widget-col-3" aria-label="Champs Key Metrics">
+          <div class="kpi-box">
+            <span class="kpi-value" id="champs-kpi-participants">--</span>
+            <span class="kpi-label">Total Participants</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="champs-kpi-entries">--</span>
+            <span class="kpi-label">Competition Entries</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="champs-kpi-sj">--</span>
+            <span class="kpi-label">Sub Junior (6–12)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="champs-kpi-j">--</span>
+            <span class="kpi-label">Junior (13–18)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="champs-kpi-s">--</span>
+            <span class="kpi-label">Senior (19+)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="champs-kpi-vja">--</span>
+            <span class="kpi-label">From Vijayawada</span>
+          </div>
+        </section>
+
+        <!-- Sub-Competitions Cards -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Sub-Competitions in Vijayawada Champs</h3>
+            <span style="font-size:0.75rem; color:var(--muted);">Click any card to filter directory</span>
+          </div>
+          <div class="sub-cat-grid" id="champs-sub-cards">
+            <!-- Dynamically populated in app.js -->
+          </div>
+        </article>
+
+        <!-- Age Bands Chart -->
+        <article class="card widget-col-2">
+          <div class="card-header"><h3 class="card-title">Age Split</h3></div>
+          <div class="chart-wrap">
+            <canvas id="chart-champs-age" aria-label="Age split for Vijayawada Champs"></canvas>
+          </div>
+        </article>
+
+        <!-- Gender Chart -->
+        <article class="card">
+          <div class="card-header"><h3 class="card-title">Gender Split</h3></div>
+          <div class="chart-wrap">
+            <canvas id="chart-champs-gender" aria-label="Gender split for Vijayawada Champs"></canvas>
+          </div>
+        </article>
+
+        <!-- Dedicated Participant Directory Table -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Vijayawada Champs Participant Directory</h3>
+            <span id="champs-dir-count" style="font-size:0.8rem; font-weight:600; color:var(--muted);">-- participants</span>
+          </div>
+
+          <div class="event-filter-toolbar">
+            <input type="search" class="event-filter-input" id="champs-search" placeholder="Search name, ID, phone, institution…">
+            <select class="event-filter-select" id="champs-filter-sub">
+              <option value="all">All Sub-Competitions</option>
+            </select>
+            <select class="event-filter-select" id="champs-filter-cat">
+              <option value="all">All Categories</option>
+              <option value="SJ">Sub Junior (6–12)</option>
+              <option value="J">Junior (13–18)</option>
+              <option value="S">Senior (19+)</option>
+            </select>
+            <select class="event-filter-select" id="champs-filter-status">
+              <option value="all">All Statuses</option>
+              <option value="New">New</option>
+              <option value="Verified">Verified</option>
+              <option value="Contacted">Contacted</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Needs Correction">Needs Correction</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" aria-label="Vijayawada Champs Directory">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Participant</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Sub-Competitions</th>
+                  <th scope="col">Institution</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="champs-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="event-pagination">
+            <span id="champs-pagination-info">Showing 1–25 of --</span>
+            <div style="display:flex; gap:8px;">
+              <button id="champs-btn-prev">‹ Previous</button>
+              <button id="champs-btn-next">Next ›</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TAB 2C: VIJAYAWADA GOT TALENT
+         ========================================================================= -->
+    <section class="tab-panel" id="tab-talent" aria-labelledby="talent-heading">
+      <div class="compact-hero-banner">
+        <img src="vijayawada_assets/talent.jpg" alt="Got Talent Poster" class="compact-thumbnail" width="80" height="80">
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;">
+            <h2 class="panel-title" id="talent-heading">Vijayawada Got Talent <span style="font-family:'Tiro Telugu',serif; font-size:1.1rem; color:var(--teal); font-weight:600;">· విజయవాడ గాట్ టాలెంట్</span></h2>
+            <span class="badge" style="background:#17708C; color:#fff; font-weight:700;">Creative & Performing Arts</span>
+          </div>
+          <p class="panel-desc">Art, painting, craft, literary writing, poetry, magic, mimicry, standup, cooking, and unique talents.</p>
+        </div>
+      </div>
+
+      <div class="sub-nav-pills">
+        <button class="sub-nav-pill" onclick="location.hash='#gen'">🎭 All General</button>
+        <button class="sub-nav-pill" onclick="location.hash='#idol'">🎤 Vijayawada Idol</button>
+        <button class="sub-nav-pill" onclick="location.hash='#champs'">🏆 Vijayawada Champs</button>
+        <button class="sub-nav-pill active" onclick="location.hash='#talent'">🎨 Got Talent</button>
+        <button class="sub-nav-pill" onclick="location.hash='#quiz'">🧠 The Vijayawada Quiz</button>
+        <button class="sub-nav-pill" onclick="location.hash='#family'">👨‍👩‍👧 Family Talent</button>
+      </div>
+
+      <div class="widget-grid">
+        <!-- Event KPI Row -->
+        <section class="kpi-row widget-col-3" aria-label="Talent Key Metrics">
+          <div class="kpi-box">
+            <span class="kpi-value" id="talent-kpi-participants">--</span>
+            <span class="kpi-label">Total Participants</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="talent-kpi-entries">--</span>
+            <span class="kpi-label">Competition Entries</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="talent-kpi-sj">--</span>
+            <span class="kpi-label">Sub Junior (6–12)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="talent-kpi-j">--</span>
+            <span class="kpi-label">Junior (13–18)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="talent-kpi-s">--</span>
+            <span class="kpi-label">Senior (19+)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="talent-kpi-vja">--</span>
+            <span class="kpi-label">From Vijayawada</span>
+          </div>
+        </section>
+
+        <!-- Sub-Competitions Cards -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Sub-Competitions in Vijayawada Got Talent</h3>
+            <span style="font-size:0.75rem; color:var(--muted);">Click any card to filter directory</span>
+          </div>
+          <div class="sub-cat-grid" id="talent-sub-cards">
+            <!-- Dynamically populated in app.js -->
+          </div>
+        </article>
+
+        <!-- Age Bands Chart -->
+        <article class="card widget-col-2">
+          <div class="card-header"><h3 class="card-title">Age Split</h3></div>
+          <div class="chart-wrap">
+            <canvas id="chart-talent-age" aria-label="Age split for Vijayawada Got Talent"></canvas>
+          </div>
+        </article>
+
+        <!-- Gender Chart -->
+        <article class="card">
+          <div class="card-header"><h3 class="card-title">Gender Split</h3></div>
+          <div class="chart-wrap">
+            <canvas id="chart-talent-gender" aria-label="Gender split for Vijayawada Got Talent"></canvas>
+          </div>
+        </article>
+
+        <!-- Dedicated Participant Directory Table -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Vijayawada Got Talent Participant Directory</h3>
+            <span id="talent-dir-count" style="font-size:0.8rem; font-weight:600; color:var(--muted);">-- participants</span>
+          </div>
+
+          <div class="event-filter-toolbar">
+            <input type="search" class="event-filter-input" id="talent-search" placeholder="Search name, ID, phone, institution…">
+            <select class="event-filter-select" id="talent-filter-sub">
+              <option value="all">All Sub-Competitions</option>
+            </select>
+            <select class="event-filter-select" id="talent-filter-cat">
+              <option value="all">All Categories</option>
+              <option value="SJ">Sub Junior (6–12)</option>
+              <option value="J">Junior (13–18)</option>
+              <option value="S">Senior (19+)</option>
+            </select>
+            <select class="event-filter-select" id="talent-filter-status">
+              <option value="all">All Statuses</option>
+              <option value="New">New</option>
+              <option value="Verified">Verified</option>
+              <option value="Contacted">Contacted</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Needs Correction">Needs Correction</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" aria-label="Vijayawada Got Talent Directory">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Participant</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Sub-Competitions</th>
+                  <th scope="col">Institution</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="talent-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="event-pagination">
+            <span id="talent-pagination-info">Showing 1–25 of --</span>
+            <div style="display:flex; gap:8px;">
+              <button id="talent-btn-prev">‹ Previous</button>
+              <button id="talent-btn-next">Next ›</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TAB 2D: THE VIJAYAWADA QUIZ
+         ========================================================================= -->
+    <section class="tab-panel" id="tab-quiz" aria-labelledby="quiz-heading">
+      <div class="compact-hero-banner">
+        <img src="vijayawada_assets/quiz.jpg" alt="Quiz Poster" class="compact-thumbnail" width="80" height="80">
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;">
+            <h2 class="panel-title" id="quiz-heading">The Vijayawada Quiz <span style="font-family:'Tiro Telugu',serif; font-size:1.1rem; color:var(--hero); font-weight:600;">· ది విజయవాడ క్విజ్</span></h2>
+            <span class="badge" style="background:#4A1029; color:#fff; font-weight:700;">Heritage & City Knowledge</span>
+          </div>
+          <p class="panel-desc">Teams of 3 answering questions about Vijayawada's rich history, Telugu culture, geography, and leaders.</p>
+        </div>
+      </div>
+
+      <div class="sub-nav-pills">
+        <button class="sub-nav-pill" onclick="location.hash='#gen'">🎭 All General</button>
+        <button class="sub-nav-pill" onclick="location.hash='#idol'">🎤 Vijayawada Idol</button>
+        <button class="sub-nav-pill" onclick="location.hash='#champs'">🏆 Vijayawada Champs</button>
+        <button class="sub-nav-pill" onclick="location.hash='#talent'">🎨 Got Talent</button>
+        <button class="sub-nav-pill active" onclick="location.hash='#quiz'">🧠 The Vijayawada Quiz</button>
+        <button class="sub-nav-pill" onclick="location.hash='#family'">👨‍👩‍👧 Family Talent</button>
+      </div>
+
+      <div class="widget-grid">
+        <!-- Event KPI Row -->
+        <section class="kpi-row widget-col-3" aria-label="Quiz Key Metrics">
+          <div class="kpi-box">
+            <span class="kpi-value" id="quiz-kpi-participants">--</span>
+            <span class="kpi-label">Total Participants</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="quiz-kpi-entries">--</span>
+            <span class="kpi-label">Competition Entries</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="quiz-kpi-sj">--</span>
+            <span class="kpi-label">Sub Junior (6–12)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="quiz-kpi-j">--</span>
+            <span class="kpi-label">Junior (13–18)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="quiz-kpi-s">--</span>
+            <span class="kpi-label">Senior (19+)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="quiz-kpi-vja">--</span>
+            <span class="kpi-label">From Vijayawada</span>
+          </div>
+        </section>
+
+        <!-- Sub-Competitions Cards -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Sub-Competitions in The Vijayawada Quiz</h3>
+            <span style="font-size:0.75rem; color:var(--muted);">Click any card to filter directory</span>
+          </div>
+          <div class="sub-cat-grid" id="quiz-sub-cards">
+            <!-- Dynamically populated in app.js -->
+          </div>
+        </article>
+
+        <!-- Age Bands Chart -->
+        <article class="card widget-col-2">
+          <div class="card-header"><h3 class="card-title">Age Split</h3></div>
+          <div class="chart-wrap">
+            <canvas id="chart-quiz-age" aria-label="Age split for The Vijayawada Quiz"></canvas>
+          </div>
+        </article>
+
+        <!-- Gender Chart -->
+        <article class="card">
+          <div class="card-header"><h3 class="card-title">Gender Split</h3></div>
+          <div class="chart-wrap">
+            <canvas id="chart-quiz-gender" aria-label="Gender split for The Vijayawada Quiz"></canvas>
+          </div>
+        </article>
+
+        <!-- Dedicated Participant Directory Table -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">The Vijayawada Quiz Participant Directory</h3>
+            <span id="quiz-dir-count" style="font-size:0.8rem; font-weight:600; color:var(--muted);">-- participants</span>
+          </div>
+
+          <div class="event-filter-toolbar">
+            <input type="search" class="event-filter-input" id="quiz-search" placeholder="Search name, ID, phone, institution…">
+            <select class="event-filter-select" id="quiz-filter-sub">
+              <option value="all">All Sub-Competitions</option>
+            </select>
+            <select class="event-filter-select" id="quiz-filter-cat">
+              <option value="all">All Categories</option>
+              <option value="SJ">Sub Junior (6–12)</option>
+              <option value="J">Junior (13–18)</option>
+              <option value="S">Senior (19+)</option>
+            </select>
+            <select class="event-filter-select" id="quiz-filter-status">
+              <option value="all">All Statuses</option>
+              <option value="New">New</option>
+              <option value="Verified">Verified</option>
+              <option value="Contacted">Contacted</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Needs Correction">Needs Correction</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" aria-label="The Vijayawada Quiz Directory">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Participant</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Sub-Competitions</th>
+                  <th scope="col">Institution</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="quiz-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="event-pagination">
+            <span id="quiz-pagination-info">Showing 1–25 of --</span>
+            <div style="display:flex; gap:8px;">
+              <button id="quiz-btn-prev">‹ Previous</button>
+              <button id="quiz-btn-next">Next ›</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         TAB 2E: FAMILY TALENT
+         ========================================================================= -->
+    <section class="tab-panel" id="tab-family" aria-labelledby="family-heading">
+      <div class="compact-hero-banner">
+        <img src="vijayawada_assets/family.jpg" alt="Family Talent Poster" class="compact-thumbnail" width="80" height="80">
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:8px;">
+            <h2 class="panel-title" id="family-heading">Family Talent <span style="font-family:'Tiro Telugu',serif; font-size:1.1rem; color:var(--accent); font-weight:600;">· ఫ్యామిలీ టాలెంట్</span></h2>
+            <span class="badge" style="background:#E89E15; color:#1C2145; font-weight:700;">Multi-Generational Celebration</span>
+          </div>
+          <p class="panel-desc">Celebrate and perform together with family: parents, children & grandparents in singing, dancing, skit & bands.</p>
+        </div>
+      </div>
+
+      <div class="sub-nav-pills">
+        <button class="sub-nav-pill" onclick="location.hash='#gen'">🎭 All General</button>
+        <button class="sub-nav-pill" onclick="location.hash='#idol'">🎤 Vijayawada Idol</button>
+        <button class="sub-nav-pill" onclick="location.hash='#champs'">🏆 Vijayawada Champs</button>
+        <button class="sub-nav-pill" onclick="location.hash='#talent'">🎨 Got Talent</button>
+        <button class="sub-nav-pill" onclick="location.hash='#quiz'">🧠 The Vijayawada Quiz</button>
+        <button class="sub-nav-pill active" onclick="location.hash='#family'">👨‍👩‍👧 Family Talent</button>
+      </div>
+
+      <div class="widget-grid">
+        <!-- Event KPI Row -->
+        <section class="kpi-row widget-col-3" aria-label="Family Key Metrics">
+          <div class="kpi-box">
+            <span class="kpi-value" id="family-kpi-participants">--</span>
+            <span class="kpi-label">Total Participants</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="family-kpi-entries">--</span>
+            <span class="kpi-label">Competition Entries</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="family-kpi-sj">--</span>
+            <span class="kpi-label">Sub Junior (6–12)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="family-kpi-j">--</span>
+            <span class="kpi-label">Junior (13–18)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="family-kpi-s">--</span>
+            <span class="kpi-label">Senior (19+)</span>
+          </div>
+          <div class="kpi-box">
+            <span class="kpi-value" id="family-kpi-vja">--</span>
+            <span class="kpi-label">From Vijayawada</span>
+          </div>
+        </section>
+
+        <!-- Sub-Competitions Cards -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Sub-Competitions in Family Talent</h3>
+            <span style="font-size:0.75rem; color:var(--muted);">Click any card to filter directory</span>
+          </div>
+          <div class="sub-cat-grid" id="family-sub-cards">
+            <!-- Dynamically populated in app.js -->
+          </div>
+        </article>
+
+        <!-- Age Bands Chart -->
+        <article class="card widget-col-2">
+          <div class="card-header"><h3 class="card-title">Age Split</h3></div>
+          <div class="chart-wrap">
+            <canvas id="chart-family-age" aria-label="Age split for Family Talent"></canvas>
+          </div>
+        </article>
+
+        <!-- Gender Chart -->
+        <article class="card">
+          <div class="card-header"><h3 class="card-title">Gender Split</h3></div>
+          <div class="chart-wrap">
+            <canvas id="chart-family-gender" aria-label="Gender split for Family Talent"></canvas>
+          </div>
+        </article>
+
+        <!-- Dedicated Participant Directory Table -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Family Talent Participant Directory</h3>
+            <span id="family-dir-count" style="font-size:0.8rem; font-weight:600; color:var(--muted);">-- participants</span>
+          </div>
+
+          <div class="event-filter-toolbar">
+            <input type="search" class="event-filter-input" id="family-search" placeholder="Search name, ID, phone, institution…">
+            <select class="event-filter-select" id="family-filter-sub">
+              <option value="all">All Sub-Competitions</option>
+            </select>
+            <select class="event-filter-select" id="family-filter-cat">
+              <option value="all">All Categories</option>
+              <option value="SJ">Sub Junior (6–12)</option>
+              <option value="J">Junior (13–18)</option>
+              <option value="S">Senior (19+)</option>
+            </select>
+            <select class="event-filter-select" id="family-filter-status">
+              <option value="all">All Statuses</option>
+              <option value="New">New</option>
+              <option value="Verified">Verified</option>
+              <option value="Contacted">Contacted</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Needs Correction">Needs Correction</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" aria-label="Family Talent Directory">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Participant</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Sub-Competitions</th>
+                  <th scope="col">Institution</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="family-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="event-pagination">
+            <span id="family-pagination-info">Showing 1–25 of --</span>
+            <div style="display:flex; gap:8px;">
+              <button id="family-btn-prev">‹ Previous</button>
+              <button id="family-btn-next">Next ›</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- =========================================================================
          TAB 3: CROWN OF VIJAYAWADA
          ========================================================================= -->
     <section class="tab-panel" id="tab-crown" aria-labelledby="crown-heading">
@@ -300,6 +1037,55 @@
             <canvas id="chart-crown-gender" aria-label="Crown gender split"></canvas>
           </div>
         </div>
+        <!-- Dedicated Crown Participant Directory Table -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Crown of Vijayawada Participant Directory</h3>
+            <span id="crown-dir-count" style="font-size:0.8rem; font-weight:600; color:var(--muted);">-- participants</span>
+          </div>
+
+          <div class="event-filter-toolbar">
+            <input type="search" class="event-filter-input" id="crown-search" placeholder="Search name, ID, phone, city…">
+            <select class="event-filter-select" id="crown-filter-cat">
+              <option value="all">All Crown Categories</option>
+            </select>
+            <select class="event-filter-select" id="crown-filter-status">
+              <option value="all">All Statuses</option>
+              <option value="New">New</option>
+              <option value="Verified">Verified</option>
+              <option value="Contacted">Contacted</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Needs Correction">Needs Correction</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" aria-label="Crown Participant Directory">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Participant</th>
+                  <th scope="col">Category</th>
+                  <th scope="col">Age / Gender</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Flags</th>
+                </tr>
+              </thead>
+              <tbody id="crown-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="event-pagination">
+            <span id="crown-pagination-info">Showing 1–25 of --</span>
+            <div style="display:flex; gap:8px;">
+              <button id="crown-btn-prev">‹ Previous</button>
+              <button id="crown-btn-next">Next ›</button>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -339,6 +1125,60 @@
             <canvas id="chart-ww-links" aria-label="Valid vs unclear links"></canvas>
           </div>
         </div>
+
+        <!-- Dedicated Wonder Women Participant Directory Table -->
+        <article class="card widget-col-3">
+          <div class="card-header">
+            <h3 class="card-title">Wonder Women Participant Directory</h3>
+            <span id="ww-dir-count" style="font-size:0.8rem; font-weight:600; color:var(--muted);">-- participants</span>
+          </div>
+
+          <div class="event-filter-toolbar">
+            <input type="search" class="event-filter-input" id="ww-search" placeholder="Search name, ID, phone, location…">
+            <select class="event-filter-select" id="ww-filter-cat">
+              <option value="all">All WW Categories</option>
+            </select>
+            <select class="event-filter-select" id="ww-filter-link">
+              <option value="all">All Links (Valid & Unclear)</option>
+              <option value="valid">Valid Links Only</option>
+              <option value="unclear">Needs Verification / Unclear</option>
+            </select>
+            <select class="event-filter-select" id="ww-filter-status">
+              <option value="all">All Statuses</option>
+              <option value="New">New</option>
+              <option value="Verified">Verified</option>
+              <option value="Contacted">Contacted</option>
+              <option value="Confirmed">Confirmed</option>
+              <option value="Needs Correction">Needs Correction</option>
+            </select>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table" aria-label="Wonder Women Directory">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">Participant</th>
+                  <th scope="col">Categories Selected</th>
+                  <th scope="col">Work Link</th>
+                  <th scope="col">Location</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody id="ww-tbody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <div class="event-pagination">
+            <span id="ww-pagination-info">Showing 1–25 of --</span>
+            <div style="display:flex; gap:8px;">
+              <button id="ww-btn-prev">‹ Previous</button>
+              <button id="ww-btn-next">Next ›</button>
+            </div>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -361,11 +1201,16 @@
         <div class="filter-controls-row">
           <input type="search" class="filter-input filter-input-search" id="filter-search" placeholder="Search by name, ID, phone, school...">
 
-          <select class="filter-select" id="filter-form" aria-label="Filter by Form">
-            <option value="all">All Forms</option>
-            <option value="General">General</option>
-            <option value="Crown">Crown of Vijayawada</option>
-            <option value="Wonder Women">Wonder Women</option>
+          <select class="filter-select" id="filter-form" aria-label="Filter by Form or Competition">
+            <option value="all">All Forms & Competitions</option>
+            <option value="General">🎭 General (All)</option>
+            <option value="Idol">🎤 Vijayawada Idol</option>
+            <option value="Champs">🏆 Vijayawada Champs</option>
+            <option value="Talent">🎨 Vijayawada Got Talent</option>
+            <option value="Quiz">🧠 The Vijayawada Quiz</option>
+            <option value="Family">👨‍👩‍👧 Family Talent</option>
+            <option value="Crown">👑 Crown of Vijayawada</option>
+            <option value="Wonder Women">✨ Wonder Women</option>
           </select>
 
           <select class="filter-select" id="filter-status" aria-label="Filter by Status">

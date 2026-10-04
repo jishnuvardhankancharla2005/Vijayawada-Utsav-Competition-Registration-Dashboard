@@ -104,7 +104,7 @@
   function initRouter() {
     function handleRoute() {
       const hash = window.location.hash.replace('#', '') || 'overview';
-      const validTabs = ['overview', 'gen', 'crown', 'ww', 'participants', 'quality'];
+      const validTabs = ['overview', 'gen', 'idol', 'champs', 'talent', 'quiz', 'family', 'crown', 'ww', 'participants', 'quality'];
       const targetTab = validTabs.includes(hash) ? hash : 'overview';
 
       state.activeTab = targetTab;
@@ -224,6 +224,21 @@
       case 'gen':
         renderGeneral();
         break;
+      case 'idol':
+        renderEventTab('Idol', 'idol', { color: '#8C1D40', secondaryColor: '#F2B01E' });
+        break;
+      case 'champs':
+        renderEventTab('Champs', 'champs', { color: '#F2B01E', secondaryColor: '#17708C' });
+        break;
+      case 'talent':
+        renderEventTab('Talent', 'talent', { color: '#17708C', secondaryColor: '#8C1D40' });
+        break;
+      case 'quiz':
+        renderEventTab('Quiz', 'quiz', { color: '#4A1029', secondaryColor: '#F2B01E' });
+        break;
+      case 'family':
+        renderEventTab('Family', 'family', { color: '#E89E15', secondaryColor: '#17708C' });
+        break;
       case 'crown':
         renderCrown();
         break;
@@ -293,6 +308,126 @@
     if (outNum) outNum.textContent = o.geo.outsideAP.toLocaleString();
     const outPct = document.getElementById('geo-out-pct');
     if (outPct) outPct.textContent = `${o.geo.outsidePct}%`;
+
+    // Widget 7: All 7 Official Competitions Showcase Cards
+    renderOverviewCompetitionsGrid();
+  }
+
+  /**
+   * Render All 7 Official Competition Cards in Overview Tab
+   */
+  function renderOverviewCompetitionsGrid() {
+    const gridEl = document.getElementById('overview-competitions-grid');
+    if (!gridEl || !state.data) return;
+
+    const gParts = state.data.general ? state.data.general.participants : [];
+    const cParts = state.data.crown ? state.data.crown.participants : [];
+    const wParts = state.data.wonderWomen ? state.data.wonderWomen.participants : [];
+
+    const countEvent = (key) => gParts.filter(p => p.competitions && p.competitions[key] && p.competitions[key].length > 0).length;
+    const entriesEvent = (key) => gParts.reduce((sum, p) => sum + (p.competitions && p.competitions[key] ? p.competitions[key].length : 0), 0);
+
+    const comps = [
+      {
+        id: 'idol',
+        title: 'Vijayawada Idol',
+        telugu: 'విజయవాడ ఐడల్',
+        badge: 'Solo Arts',
+        poster: 'vijayawada_assets/idol.jpg',
+        desc: 'Solo dance (classical & western), vocal music (carnatic & light), instruments & mono action',
+        participants: countEvent('Idol'),
+        entries: entriesEvent('Idol')
+      },
+      {
+        id: 'champs',
+        title: 'Vijayawada Champs',
+        telugu: 'విజయవాడ చాంప్స్',
+        badge: 'Group & Sports',
+        poster: 'vijayawada_assets/champs.jpg',
+        desc: 'Group dance, vocal choir, bands, karate, skating, yoga, chess & theatre',
+        participants: countEvent('Champs'),
+        entries: entriesEvent('Champs')
+      },
+      {
+        id: 'talent',
+        title: 'Vijayawada Got Talent',
+        telugu: 'విజయవాడ గాట్ టాలెంట్',
+        badge: 'Creative Arts',
+        poster: 'vijayawada_assets/talent.jpg',
+        desc: 'Art, craft, poetry, magic, mimicry, standup, cooking & unique talents',
+        participants: countEvent('Talent'),
+        entries: entriesEvent('Talent')
+      },
+      {
+        id: 'quiz',
+        title: 'The Vijayawada Quiz',
+        telugu: 'ది విజయవాడ క్విజ్',
+        badge: 'City Heritage',
+        poster: 'vijayawada_assets/quiz.jpg',
+        desc: 'Teams of three, city history, Telugu culture, heritage & Andhra Pradesh quiz',
+        participants: countEvent('Quiz'),
+        entries: entriesEvent('Quiz')
+      },
+      {
+        id: 'family',
+        title: 'Family Talent',
+        telugu: 'ఫ్యామిలీ టాలెంట్',
+        badge: 'Family Celebration',
+        poster: 'vijayawada_assets/family.jpg',
+        desc: 'Celebrate and perform together with family: singing, dance, skit & bands',
+        participants: countEvent('Family'),
+        entries: entriesEvent('Family')
+      },
+      {
+        id: 'crown',
+        title: 'Crown of Vijayawada',
+        telugu: 'క్రౌన్ ఆఫ్ విజయవాడ',
+        badge: '7 Titles Pageant',
+        poster: 'vijayawada_assets/crown.jpg',
+        desc: 'Little, Teen, Miss, Mrs, Mr, Couple, and Golden Face Vijayawada titles',
+        participants: cParts.length,
+        entries: cParts.length
+      },
+      {
+        id: 'ww',
+        title: 'Wonder Women',
+        telugu: 'వండర్ విమెన్',
+        badge: '10 Categories',
+        poster: 'vijayawada_assets/wonder.jpg',
+        desc: 'Ten prestigious competitions celebrating women of our city (18+ women)',
+        participants: wParts.length,
+        entries: wParts.reduce((sum, p) => sum + (p.categories ? p.categories.length : 1), 0)
+      }
+    ];
+
+    gridEl.innerHTML = comps.map(c => `
+      <div class="competition-card" onclick="location.hash='#${c.id}'">
+        <div class="comp-card-poster-wrap">
+          <img src="${c.poster}" alt="${escapeHtml(c.title)}" class="comp-card-poster" loading="lazy">
+          <span class="comp-card-badge">${c.badge}</span>
+        </div>
+        <div class="comp-card-body">
+          <div class="comp-card-title-row">
+            <h4 class="comp-card-title">${escapeHtml(c.title)}</h4>
+            <span class="comp-card-telugu">${escapeHtml(c.telugu)}</span>
+          </div>
+          <p class="comp-card-desc">${escapeHtml(c.desc)}</p>
+          <div class="comp-card-stats">
+            <div class="comp-card-stat-item">
+              <div class="comp-card-stat-val">${c.participants.toLocaleString()}</div>
+              <div class="comp-card-stat-lbl">Participants</div>
+            </div>
+            <div class="comp-card-stat-item">
+              <div class="comp-card-stat-val">${c.entries.toLocaleString()}</div>
+              <div class="comp-card-stat-lbl">Entries</div>
+            </div>
+          </div>
+          <button class="comp-card-btn">
+            <span>Explore Dashboard</span> <span>→</span>
+          </button>
+        </div>
+      </div>
+    `).join('');
   }
 
   /**
@@ -346,6 +481,265 @@
     if (subGenEl) subGenEl.textContent = g.stats.totalSubmissions;
     const repeatGenEl = document.getElementById('gen-kpi-repeats');
     if (repeatGenEl) repeatGenEl.textContent = g.stats.removedRepeats;
+  }
+
+  /**
+   * Dedicated General Competition Tab Rendering (Idol, Champs, Talent, Quiz, Family)
+   */
+  const eventTableStates = {};
+
+  function renderEventTab(eventKey, prefix, opts = {}) {
+    const g = state.data.general;
+    if (!g) return;
+
+    const baseList = g.participants.filter(p => p.competitions && p.competitions[eventKey] && p.competitions[eventKey].length > 0);
+    const totalEntries = baseList.reduce((sum, p) => sum + p.competitions[eventKey].length, 0);
+
+    // 1. Snapshot KPIs
+    const sj = baseList.filter(p => p.ageCategory === 'Sub Junior').length;
+    const j = baseList.filter(p => p.ageCategory === 'Junior').length;
+    const s = baseList.filter(p => p.ageCategory === 'Senior').length;
+    const vja = baseList.filter(p => p.classifiedLoc === 'Vijayawada').length;
+
+    const pEl = document.getElementById(`${prefix}-kpi-participants`);
+    if (pEl) pEl.textContent = baseList.length.toLocaleString();
+    const eEl = document.getElementById(`${prefix}-kpi-entries`);
+    if (eEl) eEl.textContent = totalEntries.toLocaleString();
+    const sjEl = document.getElementById(`${prefix}-kpi-sj`);
+    if (sjEl) sjEl.textContent = sj.toLocaleString();
+    const jEl = document.getElementById(`${prefix}-kpi-j`);
+    if (jEl) jEl.textContent = j.toLocaleString();
+    const sEl = document.getElementById(`${prefix}-kpi-s`);
+    if (sEl) sEl.textContent = s.toLocaleString();
+    const vjaEl = document.getElementById(`${prefix}-kpi-vja`);
+    if (vjaEl) vjaEl.textContent = vja.toLocaleString();
+
+    // 2. Sub-competitions breakdown
+    const subMap = {};
+    baseList.forEach(p => {
+      p.competitions[eventKey].forEach(item => {
+        const name = item.shortName || item.fullName;
+        subMap[name] = (subMap[name] || 0) + 1;
+      });
+    });
+
+    const maxSub = Math.max(1, ...Object.values(subMap));
+    const subCardsEl = document.getElementById(`${prefix}-sub-cards`);
+    const subSelectEl = document.getElementById(`${prefix}-filter-sub`);
+
+    // Populate sub-competitions select once
+    if (subSelectEl && subSelectEl.options.length <= 1) {
+      Object.keys(subMap).sort().forEach(sub => {
+        const opt = document.createElement('option');
+        opt.value = sub;
+        opt.textContent = sub;
+        subSelectEl.appendChild(opt);
+      });
+    }
+
+    if (!eventTableStates[prefix]) {
+      eventTableStates[prefix] = {
+        search: '',
+        sub: 'all',
+        cat: 'all',
+        status: 'all',
+        page: 1,
+        pageSize: 25
+      };
+    }
+    const tState = eventTableStates[prefix];
+
+    if (subCardsEl) {
+      subCardsEl.innerHTML = Object.entries(subMap)
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, count]) => {
+          const pct = Math.round((count / Math.max(1, totalEntries)) * 100);
+          const barPct = Math.round((count / maxSub) * 100);
+          const isActive = tState.sub === name;
+          return `
+            <div class="sub-cat-card ${isActive ? 'active' : ''}" data-sub-name="${escapeHtml(name)}">
+              <div class="sub-cat-name" title="${escapeHtml(name)}">${escapeHtml(name)}</div>
+              <div class="sub-cat-row">
+                <span class="sub-cat-count">${count}</span>
+                <span>${pct}% of event</span>
+              </div>
+              <div class="sub-cat-bar-wrap">
+                <div class="sub-cat-bar" style="width: ${barPct}%; background: ${opts.color || COLORS.primary};"></div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      subCardsEl.querySelectorAll('[data-sub-name]').forEach(card => {
+        card.addEventListener('click', () => {
+          const clickedSub = card.getAttribute('data-sub-name');
+          tState.sub = tState.sub === clickedSub ? 'all' : clickedSub;
+          if (subSelectEl) subSelectEl.value = tState.sub;
+          tState.page = 1;
+          renderEventTab(eventKey, prefix, opts);
+        });
+      });
+    }
+
+    // 3. Charts: Age & Gender
+    renderBarSplitChart(
+      `chart-${prefix}-age`,
+      ['Sub Junior', 'Junior', 'Senior'],
+      [sj, j, s],
+      [COLORS.accent, COLORS.teal, opts.color || COLORS.primary]
+    );
+
+    const gdrMap = {};
+    baseList.forEach(p => {
+      const g = p.gender || 'Unspecified';
+      gdrMap[g] = (gdrMap[g] || 0) + 1;
+    });
+    renderDoughnutSplitChart(
+      `chart-${prefix}-gender`,
+      Object.keys(gdrMap),
+      Object.values(gdrMap),
+      [opts.color || COLORS.primary, COLORS.teal, COLORS.accent]
+    );
+
+    // 4. Directory Table Rendering
+    renderEventDirectoryTable(baseList, eventKey, prefix, tState);
+  }
+
+  /**
+   * Render Event Participant Directory Table with Debounce & Pagination
+   */
+  function renderEventDirectoryTable(baseList, eventKey, prefix, tState) {
+    const searchInput = document.getElementById(`${prefix}-search`);
+    const subSelect = document.getElementById(`${prefix}-filter-sub`);
+    const catSelect = document.getElementById(`${prefix}-filter-cat`);
+    const statusSelect = document.getElementById(`${prefix}-filter-status`);
+    const tbody = document.getElementById(`${prefix}-tbody`);
+    const countEl = document.getElementById(`${prefix}-dir-count`);
+    const pageInfoEl = document.getElementById(`${prefix}-pagination-info`);
+    const btnPrev = document.getElementById(`${prefix}-btn-prev`);
+    const btnNext = document.getElementById(`${prefix}-btn-next`);
+
+    if (searchInput && !searchInput.dataset.bound) {
+      searchInput.dataset.bound = 'true';
+      searchInput.addEventListener('input', (e) => {
+        tState.search = e.target.value.toLowerCase().trim();
+        tState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (subSelect && !subSelect.dataset.bound) {
+      subSelect.dataset.bound = 'true';
+      subSelect.addEventListener('change', (e) => {
+        tState.sub = e.target.value;
+        tState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (catSelect && !catSelect.dataset.bound) {
+      catSelect.dataset.bound = 'true';
+      catSelect.addEventListener('change', (e) => {
+        tState.cat = e.target.value;
+        tState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (statusSelect && !statusSelect.dataset.bound) {
+      statusSelect.dataset.bound = 'true';
+      statusSelect.addEventListener('change', (e) => {
+        tState.status = e.target.value;
+        tState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (btnPrev && !btnPrev.dataset.bound) {
+      btnPrev.dataset.bound = 'true';
+      btnPrev.addEventListener('click', () => {
+        if (tState.page > 1) {
+          tState.page--;
+          filterAndRender();
+        }
+      });
+    }
+    if (btnNext && !btnNext.dataset.bound) {
+      btnNext.dataset.bound = 'true';
+      btnNext.addEventListener('click', () => {
+        tState.page++;
+        filterAndRender();
+      });
+    }
+
+    function filterAndRender() {
+      let filtered = baseList.filter(p => {
+        if (tState.search) {
+          const q = tState.search;
+          const match = (p.rawName && p.rawName.toLowerCase().includes(q)) ||
+                        (p.id && p.id.toLowerCase().includes(q)) ||
+                        (p.phone && p.phone.includes(q)) ||
+                        (p.institution && p.institution.toLowerCase().includes(q)) ||
+                        (p.location && p.location.toLowerCase().includes(q));
+          if (!match) return false;
+        }
+        if (tState.sub !== 'all') {
+          const hasSub = p.competitions[eventKey] && p.competitions[eventKey].some(item => (item.shortName || item.fullName) === tState.sub);
+          if (!hasSub) return false;
+        }
+        if (tState.cat !== 'all') {
+          if (p.categoryCode !== tState.cat) return false;
+        }
+        if (tState.status !== 'all') {
+          if (p.status !== tState.status) return false;
+        }
+        return true;
+      });
+
+      if (countEl) countEl.textContent = `${filtered.length.toLocaleString()} participants`;
+
+      const totalPages = Math.ceil(filtered.length / tState.pageSize) || 1;
+      if (tState.page > totalPages) tState.page = totalPages;
+      if (tState.page < 1) tState.page = 1;
+
+      const startIdx = (tState.page - 1) * tState.pageSize;
+      const pageItems = filtered.slice(startIdx, startIdx + tState.pageSize);
+
+      if (pageInfoEl) {
+        pageInfoEl.textContent = filtered.length > 0 
+          ? `Showing ${startIdx + 1}–${Math.min(startIdx + tState.pageSize, filtered.length)} of ${filtered.length}`
+          : '0 participants';
+      }
+      if (btnPrev) btnPrev.disabled = tState.page <= 1;
+      if (btnNext) btnNext.disabled = tState.page >= totalPages;
+
+      if (!tbody) return;
+      if (pageItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:var(--muted);">No participants match your criteria</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = pageItems.map(p => {
+        const subItems = p.competitions[eventKey].map(i => i.shortName || i.fullName).join(', ');
+        const statusClass = `status-${(p.status || 'New').toLowerCase().replace(/\s+/g, '-')}`;
+        return `
+          <tr data-id="${p.id}" style="cursor:pointer;">
+            <td><strong>${p.id}</strong></td>
+            <td>${escapeHtml(p.rawName)}</td>
+            <td><span class="pill-category ${p.categoryCode || 'S'}">${p.ageCategory || 'Senior'}</span></td>
+            <td>${escapeHtml(subItems)}</td>
+            <td>${escapeHtml(p.institution || '—')}</td>
+            <td>${escapeHtml(p.location || 'Vijayawada')}</td>
+            <td><span class="status-pill ${statusClass}">${p.status || 'New'}</span></td>
+          </tr>
+        `;
+      }).join('');
+
+      tbody.querySelectorAll('tr[data-id]').forEach(tr => {
+        tr.addEventListener('click', () => {
+          const id = tr.getAttribute('data-id');
+          openParticipantDrawer(id);
+        });
+      });
+    }
+
+    filterAndRender();
   }
 
   /**
@@ -413,6 +807,151 @@
     const issues = c.participants.filter(p => p.hasIssues);
     const crownIssuesEl = document.getElementById('crown-followup-count');
     if (crownIssuesEl) crownIssuesEl.textContent = `${issues.length} participants need follow-up`;
+
+    // 5. Crown Directory Table
+    renderCrownDirectoryTable(c.participants);
+  }
+
+  /**
+   * Crown Directory Table Handler with Filter & Pagination
+   */
+  const crownTableState = {
+    search: '',
+    cat: 'all',
+    status: 'all',
+    page: 1,
+    pageSize: 25
+  };
+
+  function renderCrownDirectoryTable(participants) {
+    const searchInput = document.getElementById('crown-search');
+    const catSelect = document.getElementById('crown-filter-cat');
+    const statusSelect = document.getElementById('crown-filter-status');
+    const tbody = document.getElementById('crown-tbody');
+    const countEl = document.getElementById('crown-dir-count');
+    const pageInfoEl = document.getElementById('crown-pagination-info');
+    const btnPrev = document.getElementById('crown-btn-prev');
+    const btnNext = document.getElementById('crown-btn-next');
+
+    if (catSelect && catSelect.options.length <= 1) {
+      const cats = Array.from(new Set(participants.map(p => (p.category || '').split('(')[0].trim()))).filter(Boolean).sort();
+      cats.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        catSelect.appendChild(opt);
+      });
+    }
+
+    if (searchInput && !searchInput.dataset.bound) {
+      searchInput.dataset.bound = 'true';
+      searchInput.addEventListener('input', (e) => {
+        crownTableState.search = e.target.value.toLowerCase().trim();
+        crownTableState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (catSelect && !catSelect.dataset.bound) {
+      catSelect.dataset.bound = 'true';
+      catSelect.addEventListener('change', (e) => {
+        crownTableState.cat = e.target.value;
+        crownTableState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (statusSelect && !statusSelect.dataset.bound) {
+      statusSelect.dataset.bound = 'true';
+      statusSelect.addEventListener('change', (e) => {
+        crownTableState.status = e.target.value;
+        crownTableState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (btnPrev && !btnPrev.dataset.bound) {
+      btnPrev.dataset.bound = 'true';
+      btnPrev.addEventListener('click', () => {
+        if (crownTableState.page > 1) {
+          crownTableState.page--;
+          filterAndRender();
+        }
+      });
+    }
+    if (btnNext && !btnNext.dataset.bound) {
+      btnNext.dataset.bound = 'true';
+      btnNext.addEventListener('click', () => {
+        crownTableState.page++;
+        filterAndRender();
+      });
+    }
+
+    function filterAndRender() {
+      let filtered = participants.filter(p => {
+        if (crownTableState.search) {
+          const q = crownTableState.search;
+          const match = (p.rawName && p.rawName.toLowerCase().includes(q)) ||
+                        (p.id && p.id.toLowerCase().includes(q)) ||
+                        (p.phone && p.phone.includes(q)) ||
+                        (p.location && p.location.toLowerCase().includes(q));
+          if (!match) return false;
+        }
+        if (crownTableState.cat !== 'all') {
+          if (!((p.category || '').toLowerCase().includes(crownTableState.cat.toLowerCase()))) return false;
+        }
+        if (crownTableState.status !== 'all') {
+          if (p.status !== crownTableState.status) return false;
+        }
+        return true;
+      });
+
+      if (countEl) countEl.textContent = `${filtered.length.toLocaleString()} participants`;
+
+      const totalPages = Math.ceil(filtered.length / crownTableState.pageSize) || 1;
+      if (crownTableState.page > totalPages) crownTableState.page = totalPages;
+      if (crownTableState.page < 1) crownTableState.page = 1;
+
+      const startIdx = (crownTableState.page - 1) * crownTableState.pageSize;
+      const pageItems = filtered.slice(startIdx, startIdx + crownTableState.pageSize);
+
+      if (pageInfoEl) {
+        pageInfoEl.textContent = filtered.length > 0 
+          ? `Showing ${startIdx + 1}–${Math.min(startIdx + crownTableState.pageSize, filtered.length)} of ${filtered.length}`
+          : '0 participants';
+      }
+      if (btnPrev) btnPrev.disabled = crownTableState.page <= 1;
+      if (btnNext) btnNext.disabled = crownTableState.page >= totalPages;
+
+      if (!tbody) return;
+      if (pageItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:24px; color:var(--muted);">No Crown participants match your criteria</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = pageItems.map(p => {
+        const catName = p.category ? p.category.split('(')[0].trim() : 'Crown';
+        const statusClass = `status-${(p.status || 'New').toLowerCase().replace(/\s+/g, '-')}`;
+        const flagsHtml = (p.allFlags || []).map(f => `<span class="flag-pill">${f}</span>`).join(' ');
+        return `
+          <tr data-id="${p.id}" style="cursor:pointer;">
+            <td><strong>${p.id}</strong></td>
+            <td>${escapeHtml(p.rawName)}</td>
+            <td><span class="badge" style="background:rgba(27,136,170,0.12); color:#1B88AA; font-weight:700;">${escapeHtml(catName)}</span></td>
+            <td>${p.age ? `${p.age} yrs` : '—'} / ${p.gender || '—'}</td>
+            <td>${escapeHtml(p.location || 'Vijayawada')}</td>
+            <td><span class="status-pill ${statusClass}">${p.status || 'New'}</span></td>
+            <td>${flagsHtml || '<span style="color:var(--muted); font-size:0.8rem;">✓ Clear</span>'}</td>
+          </tr>
+        `;
+      }).join('');
+
+      tbody.querySelectorAll('tr[data-id]').forEach(tr => {
+        tr.addEventListener('click', () => {
+          const id = tr.getAttribute('data-id');
+          openParticipantDrawer(id);
+        });
+      });
+    }
+
+    filterAndRender();
   }
 
   /**
@@ -468,6 +1007,172 @@
     const withLink = w.participants.filter(p => p.linkValid).length;
     const withoutLink = w.participants.length - withLink;
     renderDoughnutSplitChart('chart-ww-links', ['Valid Work Link', 'Missing / Unclear'], [withLink, withoutLink], [COLORS.teal, COLORS.accent]);
+
+    // 4. Wonder Women Directory Table
+    renderWonderWomenDirectoryTable(w.participants);
+  }
+
+  /**
+   * Wonder Women Directory Table Handler with Filter & Pagination
+   */
+  const wwTableState = {
+    search: '',
+    cat: 'all',
+    link: 'all',
+    status: 'all',
+    page: 1,
+    pageSize: 25
+  };
+
+  function renderWonderWomenDirectoryTable(participants) {
+    const searchInput = document.getElementById('ww-search');
+    const catSelect = document.getElementById('ww-filter-cat');
+    const linkSelect = document.getElementById('ww-filter-link');
+    const statusSelect = document.getElementById('ww-filter-status');
+    const tbody = document.getElementById('ww-tbody');
+    const countEl = document.getElementById('ww-dir-count');
+    const pageInfoEl = document.getElementById('ww-pagination-info');
+    const btnPrev = document.getElementById('ww-btn-prev');
+    const btnNext = document.getElementById('ww-btn-next');
+
+    if (catSelect && catSelect.options.length <= 1) {
+      const cats = Array.from(new Set(participants.flatMap(p => p.categories || []))).filter(Boolean).sort();
+      cats.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c;
+        opt.textContent = c;
+        catSelect.appendChild(opt);
+      });
+    }
+
+    if (searchInput && !searchInput.dataset.bound) {
+      searchInput.dataset.bound = 'true';
+      searchInput.addEventListener('input', (e) => {
+        wwTableState.search = e.target.value.toLowerCase().trim();
+        wwTableState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (catSelect && !catSelect.dataset.bound) {
+      catSelect.dataset.bound = 'true';
+      catSelect.addEventListener('change', (e) => {
+        wwTableState.cat = e.target.value;
+        wwTableState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (linkSelect && !linkSelect.dataset.bound) {
+      linkSelect.dataset.bound = 'true';
+      linkSelect.addEventListener('change', (e) => {
+        wwTableState.link = e.target.value;
+        wwTableState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (statusSelect && !statusSelect.dataset.bound) {
+      statusSelect.dataset.bound = 'true';
+      statusSelect.addEventListener('change', (e) => {
+        wwTableState.status = e.target.value;
+        wwTableState.page = 1;
+        filterAndRender();
+      });
+    }
+    if (btnPrev && !btnPrev.dataset.bound) {
+      btnPrev.dataset.bound = 'true';
+      btnPrev.addEventListener('click', () => {
+        if (wwTableState.page > 1) {
+          wwTableState.page--;
+          filterAndRender();
+        }
+      });
+    }
+    if (btnNext && !btnNext.dataset.bound) {
+      btnNext.dataset.bound = 'true';
+      btnNext.addEventListener('click', () => {
+        wwTableState.page++;
+        filterAndRender();
+      });
+    }
+
+    function filterAndRender() {
+      let filtered = participants.filter(p => {
+        if (wwTableState.search) {
+          const q = wwTableState.search;
+          const match = (p.rawName && p.rawName.toLowerCase().includes(q)) ||
+                        (p.id && p.id.toLowerCase().includes(q)) ||
+                        (p.phone && p.phone.includes(q)) ||
+                        (p.location && p.location.toLowerCase().includes(q));
+          if (!match) return false;
+        }
+        if (wwTableState.cat !== 'all') {
+          if (!((p.categories || []).includes(wwTableState.cat))) return false;
+        }
+        if (wwTableState.link !== 'all') {
+          if (wwTableState.link === 'valid' && !p.linkValid) return false;
+          if (wwTableState.link === 'unclear' && p.linkValid) return false;
+        }
+        if (wwTableState.status !== 'all') {
+          if (p.status !== wwTableState.status) return false;
+        }
+        return true;
+      });
+
+      if (countEl) countEl.textContent = `${filtered.length.toLocaleString()} participants`;
+
+      const totalPages = Math.ceil(filtered.length / wwTableState.pageSize) || 1;
+      if (wwTableState.page > totalPages) wwTableState.page = totalPages;
+      if (wwTableState.page < 1) wwTableState.page = 1;
+
+      const startIdx = (wwTableState.page - 1) * wwTableState.pageSize;
+      const pageItems = filtered.slice(startIdx, startIdx + wwTableState.pageSize);
+
+      if (pageInfoEl) {
+        pageInfoEl.textContent = filtered.length > 0 
+          ? `Showing ${startIdx + 1}–${Math.min(startIdx + wwTableState.pageSize, filtered.length)} of ${filtered.length}`
+          : '0 participants';
+      }
+      if (btnPrev) btnPrev.disabled = wwTableState.page <= 1;
+      if (btnNext) btnNext.disabled = wwTableState.page >= totalPages;
+
+      if (!tbody) return;
+      if (pageItems.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:24px; color:var(--muted);">No Wonder Women participants match your criteria</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = pageItems.map(p => {
+        const catBadges = (p.categories || []).map(c => `<span class="badge" style="background:rgba(154,36,73,0.1); color:#9A2449; font-weight:600; margin:2px;">${escapeHtml(c)}</span>`).join(' ');
+        const statusClass = `status-${(p.status || 'New').toLowerCase().replace(/\s+/g, '-')}`;
+        let linkCell = '<span style="color:var(--muted);">None</span>';
+        if (p.link) {
+          if (p.linkValid) {
+            linkCell = `<a href="${escapeHtml(p.link)}" target="_blank" rel="noopener" style="color:var(--teal); text-decoration:underline;">View Submission ↗</a>`;
+          } else {
+            linkCell = `<span class="flag-pill" title="${escapeHtml(p.link)}">⚠️ Unclear Link</span>`;
+          }
+        }
+
+        return `
+          <tr data-id="${p.id}" style="cursor:pointer;">
+            <td><strong>${p.id}</strong></td>
+            <td>${escapeHtml(p.rawName)}</td>
+            <td>${catBadges}</td>
+            <td>${linkCell}</td>
+            <td>${escapeHtml(p.location || 'Vijayawada')}</td>
+            <td><span class="status-pill ${statusClass}">${p.status || 'New'}</span></td>
+          </tr>
+        `;
+      }).join('');
+
+      tbody.querySelectorAll('tr[data-id]').forEach(tr => {
+        tr.addEventListener('click', () => {
+          const id = tr.getAttribute('data-id');
+          openParticipantDrawer(id);
+        });
+      });
+    }
+
+    filterAndRender();
   }
 
   /**
@@ -490,9 +1195,13 @@
       });
     }
 
-    // 2. Form Filter
+    // 2. Form & Competition Filter
     if (f.form !== 'all') {
-      list = list.filter(p => p.form.toLowerCase() === f.form.toLowerCase());
+      if (['Idol', 'Champs', 'Talent', 'Quiz', 'Family'].includes(f.form)) {
+        list = list.filter(p => p.form === 'General' && p.competitions && p.competitions[f.form] && p.competitions[f.form].length > 0);
+      } else {
+        list = list.filter(p => p.form.toLowerCase() === f.form.toLowerCase());
+      }
     }
 
     // 3. Category Filter
