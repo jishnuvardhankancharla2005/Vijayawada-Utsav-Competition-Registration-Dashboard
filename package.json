@@ -1,0 +1,20 @@
+{
+  "name": "vijayawada-utsav-dashboard",
+  "version": "2.0.0",
+  "description": "Vijayawada Utsav 2026 Registration Dashboard with Calm Heritage UI & Live Google Sheets Sync",
+  "main": "api/data.js",
+  "scripts": {
+    "test": "node test/data-rules.test.js",
+    "dev": "node dev-server.js",
+    "start": "node dev-server.js"
+  },
+  "keywords": [
+    "vijayawada",
+    "utsav",
+    "dashboard",
+    "google-sheets",
+    "live-sync"
+  ],
+  "author": "Vijayawada Utsav Committee",
+  "license": "MIT"
+}
